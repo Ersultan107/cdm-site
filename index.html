@@ -10,60 +10,29 @@
     <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        
-        :root { --primary: #2563eb; --bg-light: #f8fafc; --bg-dark: #020617; }
-        
         body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
-        
         .glass { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-        
-        /* Анимации появления */
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Голосование */
-        .vote-option {
-            position: relative;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .vote-option { position: relative; transition: all 0.3s ease; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
         .dark .vote-option { border-color: rgba(255,255,255,0.05); }
-        
-        .vote-bar-fill {
-            position: absolute; left: 0; top: 0; bottom: 0;
-            background: linear-gradient(90deg, rgba(37,99,235,0.1) 0%, rgba(37,99,235,0.2) 100%);
-            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-        }
-
-        /* Навигация */
-        .active-nav { background: var(--primary) !important; color: white !important; box-shadow: 0 10px 25px -5px rgba(37,99,235,0.4); }
-
-        /* Кастомный скролл */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .vote-bar-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, rgba(37,99,235,0.1) 0%, rgba(37,99,235,0.2) 100%); transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1); }
+        .active-nav { background: #2563eb !important; color: white !important; box-shadow: 0 10px 25px -5px rgba(37,99,235,0.4); }
     </style>
 </head>
 <body class="bg-[#f8fafc] dark:bg-[#020617] text-slate-900 dark:text-slate-100 min-h-screen pb-20 lg:pb-0">
 
     <div id="auth-screen" class="fixed inset-0 z-[500] bg-slate-950 flex items-center justify-center p-6">
-        <div class="w-full max-w-sm">
-            <div class="text-center mb-10">
-                <div class="w-20 h-20 bg-blue-600 rounded-[24px] mx-auto mb-6 flex items-center justify-center shadow-2xl shadow-blue-500/40 rotate-6">
-                    <i class="fas fa-bolt text-3xl text-white"></i>
-                </div>
-                <h1 class="text-white text-3xl font-extrabold tracking-tighter italic italic uppercase">AEC PORTAL</h1>
-                <p class="text-slate-400 text-xs mt-2 font-bold uppercase tracking-widest">Connect with your college</p>
+        <div class="w-full max-w-sm text-center">
+            <div class="w-20 h-20 bg-blue-600 rounded-[24px] mx-auto mb-6 flex items-center justify-center shadow-2xl shadow-blue-500/40 rotate-6">
+                <i class="fas fa-bolt text-3xl text-white"></i>
             </div>
-            <div class="space-y-4">
-                <input type="text" id="user-name" placeholder="Имя Фамилия" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all font-semibold">
-                <input type="text" id="user-group" placeholder="Ваша Группа" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all font-semibold uppercase">
-                <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-5 rounded-2xl font-black text-lg shadow-xl transition-all active:scale-95 uppercase tracking-wider">Войти</button>
+            <h1 class="text-white text-3xl font-extrabold uppercase tracking-tighter italic">AEC PORTAL</h1>
+            <div class="mt-10 space-y-4">
+                <input type="text" id="user-name" placeholder="Имя Фамилия" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all font-semibold text-center">
+                <input type="text" id="user-group" placeholder="Группа" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all font-semibold uppercase text-center">
+                <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-lg shadow-xl active:scale-95 transition-all">ВОЙТИ</button>
             </div>
         </div>
     </div>
@@ -74,101 +43,69 @@
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 bg-blue-600 text-white rounded-xl flex items-center justify-center shadow-lg font-black italic">A</div>
                     <div>
-                        <h2 id="display-name" class="font-bold text-sm leading-none">...</h2>
-                        <span id="display-group" class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest">...</span>
+                        <h2 id="display-name" class="font-bold text-sm leading-none uppercase">...</h2>
+                        <span id="display-group" class="text-[10px] font-extrabold text-blue-600 uppercase tracking-widest leading-none">...</span>
                     </div>
                 </div>
                 <button onclick="toggleDark()" class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-900 flex items-center justify-center border border-slate-200 dark:border-slate-800 transition-all active:scale-90">
-                    <i id="theme-icon" class="fas fa-moon text-slate-600 dark:text-slate-400"></i>
+                    <i id="theme-icon" class="fas fa-moon text-slate-600"></i>
                 </button>
             </div>
         </header>
 
         <div class="max-w-7xl mx-auto px-6 pt-24 lg:flex lg:gap-8">
-            
             <aside class="hidden lg:block w-64 shrink-0">
                 <div class="sticky top-24 bg-white dark:bg-slate-900 rounded-[32px] p-4 border border-slate-100 dark:border-slate-800 shadow-sm space-y-2">
-                    <button onclick="switchTab('voice')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
-                        <i class="fas fa-comment-dots text-blue-600"></i> Голос АЭК
-                    </button>
-                    <button onclick="switchTab('quests')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
-                        <i class="fas fa-bolt text-blue-600"></i> Задания
-                    </button>
-                    <button onclick="switchTab('rating')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
-                        <i class="fas fa-trophy text-blue-600"></i> Рейтинг
-                    </button>
-                    <button onclick="switchTab('team')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
-                        <i class="fas fa-users text-blue-600"></i> Команда
-                    </button>
+                    <button onclick="switchTab('voice')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"><i class="fas fa-comment-dots text-blue-600"></i> Голос АЭК</button>
+                    <button onclick="switchTab('quests')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"><i class="fas fa-bolt text-blue-600"></i> Задания</button>
+                    <button onclick="switchTab('rating')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"><i class="fas fa-trophy text-blue-600"></i> Рейтинг</button>
+                    <button onclick="switchTab('team')" class="nav-item w-full flex items-center gap-4 p-4 rounded-2xl font-bold text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"><i class="fas fa-users text-blue-600"></i> Команда</button>
                 </div>
             </aside>
 
-            <main class="flex-1 max-w-2xl mx-auto lg:mx-0 pb-10">
-                
+            <main class="flex-1 max-w-2xl mx-auto lg:mx-0">
                 <section id="tab-voice" class="tab-content active space-y-6">
                     <div class="bg-white dark:bg-slate-900 rounded-[40px] p-8 shadow-sm border border-slate-100 dark:border-slate-800">
-                        <h3 id="poll-question" class="text-xl font-extrabold mb-8 italic uppercase text-slate-800 dark:text-white leading-tight tracking-tight">Загрузка...</h3>
+                        <h3 id="poll-question" class="text-xl font-extrabold mb-8 italic uppercase text-slate-800 dark:text-white leading-tight tracking-tight">Загрузка опроса...</h3>
                         <div id="poll-options" class="space-y-3"></div>
                     </div>
-                    
-                    <div class="flex items-center gap-4 px-2">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Комментарии</span>
-                        <div class="h-px bg-slate-200 dark:bg-slate-800 flex-1"></div>
-                    </div>
-
                     <div id="comments-list" class="space-y-4"></div>
                 </section>
 
-                <section id="tab-quests" class="tab-content">
-                    <h3 class="font-black text-2xl mb-8 italic uppercase tracking-tighter px-2">Актуальные задания</h3>
-                    <div id="quests-list" class="grid gap-4"></div>
-                </section>
-
-                <section id="tab-rating" class="tab-content">
-                    <h3 class="font-black text-2xl mb-8 text-center italic uppercase tracking-tighter">Топ Активистов</h3>
-                    <div id="leaderboard" class="space-y-3 max-w-md mx-auto"></div>
-                </section>
-
-                <section id="tab-team" class="tab-content">
-                    <h3 class="font-black text-2xl mb-8 italic uppercase tracking-tighter px-2">Наша Команда</h3>
-                    <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div>
-                </section>
+                <section id="tab-quests" class="tab-content"><div id="quests-list" class="grid gap-4"></div></section>
+                <section id="tab-rating" class="tab-content"><div id="leaderboard" class="space-y-3 max-w-md mx-auto"></div></section>
+                <section id="tab-team" class="tab-content"><div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 gap-6"></div></section>
             </main>
         </div>
 
-        <nav class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-md">
-            <div class="bg-white/90 dark:bg-slate-950/90 glass p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex justify-around items-center">
-                <button onclick="switchTab('voice')" id="m-nav-voice" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-comment-dots text-xl"></i></button>
-                <button onclick="switchTab('quests')" id="m-nav-quests" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-bolt text-xl"></i></button>
-                <button onclick="switchTab('rating')" id="m-nav-rating" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-trophy text-xl"></i></button>
-                <button onclick="switchTab('team')" id="m-nav-team" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-users text-xl"></i></button>
-            </div>
-        </nav>
-
-        <div id="comment-bar" class="fixed bottom-24 lg:bottom-10 left-0 right-0 z-50 px-6 pointer-events-none">
-            <div class="max-w-2xl mx-auto pointer-events-auto">
-                <div class="relative group">
+        <div id="comment-bar" class="fixed bottom-24 lg:bottom-10 left-0 right-0 z-50 px-6">
+            <div class="max-w-2xl mx-auto">
+                <div class="relative">
                     <input type="text" id="comment-input" placeholder="Напиши что думаешь..." class="w-full p-5 rounded-full bg-white dark:bg-slate-900 shadow-2xl border border-slate-100 dark:border-slate-800 outline-none pr-16 focus:ring-4 ring-blue-500/10 transition-all">
-                    <button onclick="sendComment()" class="absolute right-2 top-2 bottom-2 w-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 active:scale-90 transition-all shadow-lg shadow-blue-500/30">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
+                    <button onclick="sendComment()" class="absolute right-2 top-2 bottom-2 w-12 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 active:scale-90 transition-all shadow-lg"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
         </div>
+
+        <nav class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] w-[92%] max-w-md">
+            <div class="bg-white/90 dark:bg-slate-950/90 glass p-2 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-2xl flex justify-around">
+                <button onclick="switchTab('voice')" id="m-nav-voice" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-comment-dots"></i></button>
+                <button onclick="switchTab('quests')" id="m-nav-quests" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-bolt"></i></button>
+                <button onclick="switchTab('rating')" id="m-nav-rating" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-trophy"></i></button>
+                <button onclick="switchTab('team')" id="m-nav-team" class="nav-btn-m w-14 h-14 rounded-2xl flex items-center justify-center text-slate-400 transition-all"><i class="fas fa-users"></i></button>
+            </div>
+        </nav>
     </div>
 
     <div id="quest-modal" class="fixed inset-0 z-[600] bg-slate-950/90 hidden flex items-center justify-center p-6 glass">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl scale-up">
-            <h3 id="modal-title" class="text-2xl font-black mb-2 uppercase italic text-blue-600">ОТЧЕТ</h3>
-            <p class="text-[10px] opacity-40 mb-8 font-black uppercase tracking-widest leading-none">Загрузите подтверждение выполнения</p>
+        <div class="bg-white dark:bg-slate-900 w-full max-w-sm rounded-[40px] p-8 shadow-2xl">
+            <h3 id="modal-title" class="text-2xl font-black mb-6 uppercase italic text-blue-600 text-center">ОТЧЕТ</h3>
             <input type="file" id="quest-file" accept="image/*" class="hidden">
-            <button onclick="document.getElementById('quest-file').click()" class="w-full py-10 mb-6 border-2 border-dashed border-blue-100 dark:border-slate-800 rounded-[30px] text-blue-600 font-black text-xs flex flex-col items-center gap-3 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all">
-                <i class="fas fa-camera text-3xl"></i> ВЫБРАТЬ ФОТО
-            </button>
-            <textarea id="quest-text" placeholder="Твой комментарий..." class="w-full p-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border-none outline-none text-sm mb-6 h-28 resize-none font-medium"></textarea>
+            <button onclick="document.getElementById('quest-file').click()" class="w-full py-10 mb-6 border-2 border-dashed border-blue-100 dark:border-slate-800 rounded-[30px] text-blue-600 font-black text-xs flex flex-col items-center gap-3"><i class="fas fa-camera text-3xl"></i> ВЫБРАТЬ ФОТО</button>
+            <textarea id="quest-text" placeholder="Комментарий..." class="w-full p-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border-none outline-none text-sm mb-6 h-28 resize-none"></textarea>
             <div class="flex gap-4">
-                <button onclick="closeModal()" class="flex-1 py-5 bg-slate-100 dark:bg-slate-800 rounded-2xl font-extrabold text-[10px] uppercase">Отмена</button>
-                <button onclick="submitQuest()" id="submit-btn" class="flex-1 py-5 bg-blue-600 text-white rounded-2xl font-extrabold text-[10px] uppercase shadow-lg shadow-blue-500/30">Отправить</button>
+                <button onclick="closeModal()" class="flex-1 py-5 bg-slate-100 dark:bg-slate-800 rounded-2xl font-black text-[10px] uppercase">Отмена</button>
+                <button onclick="submitQuest()" id="submit-btn" class="flex-1 py-5 bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase">Отправить</button>
             </div>
         </div>
     </div>
@@ -200,7 +137,6 @@
 
         async function loadAllData() { loadPolls(); loadComments(); loadSheetData(); }
 
-        // ЗАГРУЗКА ДАННЫХ
         async function loadSheetData() {
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.team}&t=${Date.now()}`);
@@ -208,18 +144,12 @@
                 const json = JSON.parse(text.substring(47).slice(0, -2));
                 const rows = json.table.rows;
 
-                // Квесты
-                const q = rows.slice(2).filter(r => r.c[7]?.v);
-                document.getElementById('quests-list').innerHTML = q.map(r => `
-                    <div class="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm group hover:border-blue-500/30 transition-all">
-                        <div class="flex justify-between items-start mb-6">
-                            <span class="font-black text-lg uppercase italic leading-tight">${r.c[7].v}</span>
-                            <span class="bg-blue-600 text-white px-4 py-2 rounded-2xl font-black text-[10px]">+${r.c[8]?.v || 0} Б</span>
-                        </div>
-                        <button onclick="openQuestModal('${r.c[7].v}')" class="w-full py-4 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase shadow-lg shadow-blue-500/20 active:scale-95 transition-all">Сдать отчет</button>
+                document.getElementById('quests-list').innerHTML = rows.slice(2).filter(r => r.c[7]?.v).map(r => `
+                    <div class="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-100 dark:border-slate-800 shadow-sm">
+                        <div class="flex justify-between items-start mb-6"><span class="font-black text-lg uppercase italic">${r.c[7].v}</span><span class="bg-blue-600 text-white px-4 py-2 rounded-2xl font-black text-[10px]">+${r.c[8]?.v || 0} Б</span></div>
+                        <button onclick="openQuestModal('${r.c[7].v}')" class="w-full py-4 bg-slate-900 dark:bg-blue-600 text-white rounded-2xl font-black text-[10px] uppercase">Сдать отчет</button>
                     </div>`).join('');
 
-                // Рейтинг
                 const rat = rows.slice(2).filter(r => r.c[4]?.v).map(r => ({n:r.c[4].v, s:r.c[5]?.v||0})).sort((a,b)=>b.s-a.s);
                 document.getElementById('leaderboard').innerHTML = rat.map((p,i)=>`
                     <div class="flex justify-between p-6 bg-white dark:bg-slate-900 rounded-[30px] border border-slate-50 dark:border-slate-800 shadow-sm items-center">
@@ -227,21 +157,19 @@
                         <span class="bg-slate-100 dark:bg-slate-800 px-5 py-2 rounded-2xl font-black text-xs">${p.s}</span>
                     </div>`).join('');
 
-                // Команда
                 document.getElementById('team-list').innerHTML = rows.slice(2).filter(r => r.c[0]?.v).map(r => `
                     <div class="bg-white dark:bg-slate-900 p-8 rounded-[45px] text-center border border-slate-100 dark:border-slate-800 shadow-sm">
                         <div class="w-24 h-24 mx-auto mb-6 relative">
-                            <div class="absolute inset-0 bg-blue-600 rounded-full blur-xl opacity-10"></div>
-                            ${r.c[3]?.v ? `<img src="${r.c[3].v}" class="w-full h-full rounded-full object-cover relative z-10 border-4 border-white dark:border-slate-800 shadow-xl">` : `<div class="w-full h-full rounded-full bg-blue-600 flex items-center justify-center text-white text-3xl font-black italic relative z-10">${r.c[0].v[0]}</div>`}
+                            ${r.c[3]?.v ? `<img src="${r.c[3].v}" class="w-full h-full rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-xl">` : `<div class="w-full h-full rounded-full bg-blue-600 flex items-center justify-center text-white text-3xl font-black italic">${r.c[0].v[0]}</div>`}
                         </div>
-                        <h4 class="font-black text-base uppercase italic tracking-tighter mb-1">${r.c[0].v}</h4>
-                        <p class="text-[10px] text-blue-600 font-extrabold uppercase mb-6 opacity-60 tracking-[0.2em]">${r.c[1]?.v||''}</p>
+                        <h4 class="font-black text-base uppercase italic mb-1">${r.c[0].v}</h4>
+                        <p class="text-[10px] text-blue-600 font-extrabold uppercase mb-6 opacity-60">${r.c[1]?.v||''}</p>
                         <a href="${r.c[6]?.v||'#'}" target="_blank" class="block w-full py-4 bg-slate-50 dark:bg-slate-800 rounded-2xl font-black text-[10px] uppercase hover:bg-blue-600 hover:text-white transition-all">Написать</a>
                     </div>`).join('');
             } catch(e) {}
         }
 
-        // ГОЛОСОВАНИЕ
+        // ИСПРАВЛЕННОЕ ГОЛОСОВАНИЕ С ПРИВЯЗКОЙ К ВОПРОСУ
         async function loadPolls() {
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.polls}&t=${Date.now()}`);
@@ -250,37 +178,25 @@
                 const poll = json.table.rows.find(r => r.c[3]?.v === 'active');
                 
                 if(poll) {
-                    const pollId = poll.c[0].v;
+                    const pollQuestion = poll.c[0].v;
+                    // Создаем уникальный ID для этого вопроса (хеш или просто строка)
+                    const pollId = btoa(unescape(encodeURIComponent(pollQuestion))).substring(0, 10);
                     const hasVoted = localStorage.getItem('voted_' + pollId);
-                    document.getElementById('poll-question').innerText = pollId;
                     
-                    const opts = [
-                        {t: poll.c[1]?.v, v: poll.c[4]?.v || 0},
-                        {t: poll.c[2]?.v, v: poll.c[5]?.v || 0},
-                        {t: poll.c[6]?.v, v: poll.c[9]?.v || 0},
-                        {t: poll.c[7]?.v, v: poll.c[10]?.v || 0}
-                    ].filter(o => o.t);
-                    
+                    document.getElementById('poll-question').innerText = pollQuestion;
+                    const opts = [{t: poll.c[1]?.v, v: poll.c[4]?.v || 0}, {t: poll.c[2]?.v, v: poll.c[5]?.v || 0}, {t: poll.c[6]?.v, v: poll.c[9]?.v || 0}, {t: poll.c[7]?.v, v: poll.c[10]?.v || 0}].filter(o => o.t);
                     const total = opts.reduce((a, b) => a + b.v, 0);
                     
                     document.getElementById('poll-options').innerHTML = opts.map((o, i) => {
                         const pct = total > 0 ? Math.round((o.v/total)*100) : 0;
-                        return `
-                        <button ${hasVoted ? 'disabled' : `onclick="vote(${i+1}, '${pollId}')"`} 
-                            class="vote-option w-full p-5 rounded-2xl bg-white dark:bg-slate-900 text-left overflow-hidden transition-all ${hasVoted ? 'cursor-default' : 'hover:border-blue-500/50 active:scale-95'}">
+                        return `<button ${hasVoted ? 'disabled' : `onclick="vote(${i+1}, '${pollId}')"`} class="vote-option w-full p-5 rounded-2xl bg-white dark:bg-slate-900 text-left overflow-hidden transition-all ${hasVoted ? 'cursor-default opacity-80' : 'hover:border-blue-500/50 active:scale-95'}">
                             <div class="vote-bar-fill" style="width: ${pct}%"></div>
                             <div class="relative flex justify-between items-center font-bold text-sm uppercase italic">
-                                <span class="${hasVoted ? 'opacity-50' : ''}">${o.t}</span>
-                                <span class="text-blue-600 font-black">${pct}%</span>
-                            </div>
-                        </button>`;
+                                <span>${o.t}</span><span class="text-blue-600 font-black">${pct}%</span>
+                            </div></button>`;
                     }).join('');
-                    
                     if(hasVoted) {
-                        const msg = document.createElement('p');
-                        msg.className = "text-[9px] text-center mt-6 font-black uppercase text-blue-500 tracking-[0.3em] animate-pulse";
-                        msg.innerText = "Голос принят ✓";
-                        document.getElementById('poll-options').appendChild(msg);
+                        const m = document.createElement('p'); m.className="text-[9px] text-center mt-6 font-black uppercase text-blue-500 animate-pulse"; m.innerText="Вы уже проголосовали в этой теме ✓"; document.getElementById('poll-options').appendChild(m);
                     }
                 }
             } catch(e) {}
@@ -290,16 +206,10 @@
             localStorage.setItem('voted_' + pId, 'true');
             const btns = document.querySelectorAll('.vote-option');
             btns.forEach(b => b.disabled = true);
-            
-            await fetch(SCRIPT_URL, { 
-                method: 'POST', 
-                mode: 'no-cors', 
-                body: JSON.stringify({ type: "vote", option: idx }) 
-            });
-            setTimeout(loadPolls, 300); // Мгновенное обновление UI
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "vote", option: idx }) });
+            setTimeout(loadPolls, 300);
         }
 
-        // КОММЕНТАРИИ
         async function loadComments() {
             try {
                 const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.comments}&t=${Date.now()}`);
@@ -307,10 +217,8 @@
                 const json = JSON.parse(text.substring(47).slice(0, -2));
                 document.getElementById('comments-list').innerHTML = json.table.rows.slice(1).reverse().map(r => `
                     <div class="bg-white dark:bg-slate-900 p-6 rounded-[30px] shadow-sm border border-slate-50 dark:border-slate-800">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-blue-600 font-black text-[9px] uppercase tracking-widest">${r.c[1]?.v} • ${r.c[2]?.v}</span>
-                        </div>
-                        <p class="text-sm font-semibold opacity-90 leading-relaxed">${r.c[3]?.v}</p>
+                        <span class="text-blue-600 font-black text-[9px] uppercase tracking-widest">${r.c[1]?.v} • ${r.c[2]?.v}</span>
+                        <p class="text-sm font-semibold opacity-90 mt-1">${r.c[3]?.v}</p>
                     </div>`).join('');
             } catch(e) {}
         }
@@ -321,21 +229,13 @@
             i.value = ''; loadComments();
         }
 
-        // НАВИГАЦИЯ
         function switchTab(id) {
             localStorage.setItem('aec_tab', id);
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.nav-item, .nav-btn-m').forEach(b => b.classList.remove('active-nav', 'bg-blue-600', 'text-white'));
-            
+            document.querySelectorAll('.nav-item, .nav-btn-m').forEach(b => b.classList.remove('active-nav'));
             document.getElementById('tab-'+id).classList.add('active');
-            
-            // Актив для мобайла
-            const mobBtn = document.getElementById('m-nav-'+id);
-            if(mobBtn) mobBtn.classList.add('active-nav');
-            
-            // Скрыть/показать панель ввода только в Голосе
+            if(document.getElementById('m-nav-'+id)) document.getElementById('m-nav-'+id).classList.add('active-nav');
             document.getElementById('comment-bar').style.display = (id === 'voice') ? 'block' : 'none';
-            
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -347,25 +247,23 @@
 
         function openQuestModal(q) { currentQuest = q; document.getElementById('modal-title').innerText = q; document.getElementById('quest-modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('quest-modal').classList.add('hidden'); }
-        document.getElementById('quest-file').onchange = function() { document.getElementById('submit-btn').innerText = "Готов к отправке"; };
 
         async function submitQuest() {
             const btn = document.getElementById('submit-btn');
             const file = document.getElementById('quest-file').files[0];
-            if(!file) return alert("Выберите фото!");
-            btn.disabled = true; btn.innerText = "Загрузка...";
+            if(!file) return alert("Фото!");
+            btn.disabled = true; btn.innerText = "...";
             const fd = new FormData(); fd.append("image", file);
             try {
                 const imgRes = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_KEY}`, { method: "POST", body: fd });
                 const imgData = await imgRes.json();
                 if(imgData.success) {
                     await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "quest_report", name: localStorage.getItem('aec_u'), group: localStorage.getItem('aec_g'), quest: currentQuest, proof: imgData.data.url, comment: document.getElementById('quest-text').value }) });
-                    alert("Отчет отправлен успешно!"); closeModal();
+                    alert("Отправлено!"); closeModal();
                 }
-            } catch(e) { alert("Ошибка загрузки"); }
-            btn.disabled = false; btn.innerText = "Отправить";
+            } catch(e) {}
+            btn.disabled = false; btn.innerText = "ОТПРАВИТЬ";
         }
-
         window.onload = () => { if(localStorage.getItem('aec_u')) showApp(); };
     </script>
 </body>
