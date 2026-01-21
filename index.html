@@ -3,134 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АЭК | Студенческий Портал КДМ</title>
+    <title>АЭК | Студенческий Портал</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        tailwind.config = { darkMode: 'class' }
-    </script>
+    <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .glass-header { backdrop-filter: blur(10px); background: rgba(30, 64, 175, 0.9); }
+        .tab-content.active { display: block; animation: fadeIn 0.5s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .glass-header { backdrop-filter: blur(15px); background: rgba(30, 64, 175, 0.85); }
         .dark .glass-header { background: rgba(15, 23, 42, 0.9); }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-[#0b0f1a] text-slate-800 dark:text-slate-200 transition-colors duration-300">
+<body class="bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 transition-colors duration-300">
 
     <audio id="login-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 
-    <div id="auth-screen" class="fixed inset-0 z-[100] bg-[#020617] flex items-center justify-center p-6 transition-all duration-1000">
-        <div class="w-full max-w-md text-center">
-            <div class="mb-8 inline-block p-6 bg-blue-600 rounded-[35px] shadow-2xl animate-pulse">
-                <i class="fas fa-university text-5xl text-white"></i>
+    <div id="auth-screen" class="fixed inset-0 z-[100] bg-[#020617] flex items-center justify-center p-6 transition-all duration-700">
+        <div class="w-full max-w-sm text-center">
+            <div class="mb-6 inline-block p-6 bg-blue-600 rounded-[35px] shadow-2xl">
+                <i class="fas fa-mountain text-5xl text-white"></i>
             </div>
-            <h2 class="text-white text-4xl font-black mb-2 tracking-tighter">АЭК ПОРТАЛ</h2>
-            <p class="text-blue-400 font-medium mb-10 italic">Almaty Economic College • KDM</p>
-            
-            <div class="space-y-4">
-                <input type="text" id="user-name" placeholder="Введите имя" class="w-full p-5 rounded-3xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all text-center font-bold">
-                <input type="text" id="user-group" placeholder="Ваша группа (напр. ИС 2-1)" class="w-full p-5 rounded-3xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 transition-all text-center font-bold uppercase tracking-widest">
+            <h2 class="text-white text-3xl font-black mb-8 uppercase tracking-widest italic">АЭК Portal</h2>
+            <div class="space-y-3">
+                <input type="text" id="user-name" placeholder="Имя Фамилия" class="w-full p-5 rounded-3xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 text-center font-bold">
+                <input type="text" id="user-group" placeholder="Группа (ИС 1-1)" class="w-full p-5 rounded-3xl bg-white/5 border border-white/10 text-white outline-none focus:border-blue-500 text-center font-bold uppercase tracking-widest">
             </div>
-            <button onclick="handleLogin()" class="w-full mt-8 bg-blue-600 text-white py-5 rounded-3xl font-black text-xl shadow-lg hover:bg-blue-500 transition-all active:scale-95">ВОЙТИ В ПОРТАЛ</button>
+            <button onclick="handleLogin()" class="w-full mt-8 bg-blue-600 text-white py-5 rounded-3xl font-black text-xl hover:bg-blue-500 transition-all active:scale-95 shadow-lg">ВОЙТИ</button>
         </div>
     </div>
 
-    <div id="main-app" class="hidden">
+    <div id="main-app" class="hidden min-h-screen">
         <header class="fixed top-0 left-0 right-0 z-50 glass-header text-white px-6 py-4 border-b border-white/10">
             <div class="max-w-6xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center font-black">АЭК</div>
+                    <div class="w-10 h-10 bg-white text-blue-700 rounded-xl flex items-center justify-center font-black shadow-lg">А</div>
                     <div>
                         <p id="display-name" class="font-bold text-sm leading-none">Студент</p>
-                        <p id="display-group" class="text-[9px] opacity-60 font-black uppercase">Группа</p>
+                        <p id="display-group" class="text-[9px] opacity-60 font-black uppercase tracking-widest">Группа</p>
                     </div>
                 </div>
-                <button onclick="toggleDark()" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <button onclick="toggleDark()" class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center hover:bg-white/20 transition">
                     <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
             </div>
         </header>
 
-        <main class="pt-24 pb-24 px-6 max-w-6xl mx-auto">
-            
-            <div class="flex overflow-x-auto gap-3 mb-10 pb-2 no-scrollbar">
-                <button onclick="switchTab('info')" class="px-8 py-4 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-sm flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">🏠 Главная</button>
-                <button onclick="switchTab('team')" class="px-8 py-4 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-sm flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">👥 Команда</button>
-                <button onclick="switchTab('rating')" class="px-8 py-4 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-sm flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">🏆 Рейтинг</button>
-                <button onclick="switchTab('quests')" class="px-8 py-4 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-sm flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">⚡ Квесты</button>
+        <main class="pt-28 pb-10 px-6 max-w-6xl mx-auto">
+            <div class="flex overflow-x-auto gap-3 mb-8 pb-2 no-scrollbar">
+                <button onclick="switchTab('home')" class="px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-xs flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">🏠 Инфо</button>
+                <button onclick="switchTab('team')" class="px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-xs flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">👥 КДМ</button>
+                <button onclick="switchTab('rating')" class="px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-xs flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">🏆 Топ</button>
+                <button onclick="switchTab('quests')" class="px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-xs flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">⚡ Задания</button>
+                <button onclick="switchTab('voice')" class="px-6 py-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm font-bold text-xs flex-shrink-0 border border-transparent dark:border-slate-700 active:scale-95 transition-all">🗳️ Голос</button>
             </div>
 
-            <section id="tab-info" class="tab-content active space-y-6">
-                <div class="bg-blue-600 text-white p-8 rounded-[40px] shadow-xl relative overflow-hidden">
-                    <h2 class="text-3xl font-black mb-4 relative z-10 uppercase italic">Добро пожаловать в АЭК</h2>
-                    <p class="opacity-90 text-sm leading-relaxed relative z-10">Алматинский Экономический Колледж — это место, где рождаются профессионалы. Мы объединяем традиции классического образования и современные цифровые технологии. КДМ — это сердце нашей студенческой жизни.</p>
-                    <i class="fas fa-graduation-cap absolute -right-4 -bottom-4 text-9xl opacity-10"></i>
+            <section id="tab-home" class="tab-content active space-y-6">
+                <div class="bg-blue-700 p-8 rounded-[40px] text-white shadow-xl relative overflow-hidden">
+                    <h2 class="text-3xl font-black mb-4 uppercase italic">Кузница Кадров АЭК</h2>
+                    <p class="text-sm opacity-80 leading-relaxed max-w-xl">Алматинский Экономический Колледж — это флагман образования в Алматы. Мы готовим специалистов будущего. КДМ — это твой голос в управлении колледжем.</p>
+                    <i class="fas fa-university absolute -right-6 -bottom-6 text-9xl opacity-10"></i>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-gray-100 dark:border-slate-700">
-                        <h3 class="font-black text-xl mb-4 flex items-center gap-3">
-                            <i class="fas fa-flag text-blue-500"></i> Миссия КДМ
-                        </h3>
-                        <p class="text-sm opacity-70 leading-relaxed">Комитет по делам молодежи (КДМ) — это орган студенческого самоуправления. Наша цель: сделать твое обучение ярким, защитить интересы студентов и развить лидерские качества в каждом.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                        <h3 class="font-black text-xl mb-4 text-blue-600"><i class="fas fa-eye mr-2"></i> Миссия</h3>
+                        <p class="text-xs opacity-60 leading-loose">Мы создаем лучшие условия для самореализации каждого студента. КДМ объединяет активистов для защиты интересов молодежи и развития студенческих инициатив.</p>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-gray-100 dark:border-slate-700">
-                        <h3 class="font-black text-xl mb-4 flex items-center gap-3">
-                            <i class="fas fa-star text-yellow-500"></i> Что мы делаем?
-                        </h3>
-                        <ul class="text-sm opacity-70 space-y-2">
-                            <li>• Организация масштабных мероприятий</li>
-                            <li>• Развитие спортивных и творческих секций</li>
-                            <li>• Волонтерское движение "Доброе сердце"</li>
-                            <li>• Социальная поддержка студентов</li>
+                    <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                        <h3 class="font-black text-xl mb-4 text-emerald-600"><i class="fas fa-check-circle mr-2"></i> Цели</h3>
+                        <ul class="text-xs opacity-60 space-y-2">
+                            <li>• Поддержка волонтерских движений</li>
+                            <li>• Организация культурно-массовых событий</li>
+                            <li>• Развитие дебатных и спортивных клубов</li>
                         </ul>
                     </div>
                 </div>
             </section>
 
             <section id="tab-team" class="tab-content">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="team-list"></div>
+                <div id="team-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
 
             <section id="tab-rating" class="tab-content">
-                <div class="bg-white dark:bg-slate-800 p-10 rounded-[50px] shadow-xl border border-gray-100 dark:border-slate-700 max-w-2xl mx-auto">
-                    <h2 class="text-center font-black text-2xl mb-10 tracking-widest uppercase italic">Топ Активистов</h2>
-                    <div id="leaderboard" class="space-y-4"></div>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[45px] shadow-xl max-w-2xl mx-auto border border-slate-100 dark:border-slate-700">
+                    <h2 class="text-center font-black text-2xl mb-8 uppercase italic tracking-widest">Лидеры АЭК</h2>
+                    <div id="leaderboard" class="space-y-3"></div>
                 </div>
             </section>
 
             <section id="tab-quests" class="tab-content">
-                <div id="quests-list" class="grid gap-4 max-w-3xl mx-auto"></div>
+                <div id="quests-list" class="grid gap-4 max-w-2xl mx-auto"></div>
             </section>
 
+            <section id="tab-voice" class="tab-content space-y-6">
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="bg-red-500 text-white text-[9px] font-black px-2 py-1 rounded shadow-lg uppercase animate-pulse">Live</span>
+                        <h3 class="font-black text-xl">Опрос недели</h3>
+                    </div>
+                    <h4 id="poll-question" class="font-bold text-lg text-blue-600 dark:text-blue-400 mb-6">Загрузка вопроса...</h4>
+                    <div id="poll-options" class="grid gap-3"></div>
+                </div>
+
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                    <h3 class="font-black text-xl mb-6">Стена обсуждений</h3>
+                    <div class="flex gap-2 mb-8">
+                        <input type="text" id="comment-input" placeholder="Напиши сообщение..." class="flex-1 p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border-none outline-none focus:ring-2 ring-blue-500 text-sm">
+                        <button onclick="sendComment()" class="bg-blue-600 text-white px-6 rounded-2xl hover:bg-blue-700 transition">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div id="comments-list" class="space-y-4 max-h-[300px] overflow-y-auto pr-2">
+                        <p class="text-center opacity-30 text-xs italic">Загрузка последних мнений...</p>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
     <script>
         const SHEET_ID = '1BEi1MzL4-2vTVGa_2yyYnVkkDcSch6GIZKeWUHRYFxY';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwtO8ThFttkkZKxF2MOFKKz69RU2cT78KAYBdChTV1nkVB3SNAnOlGHFVv_J6tpEm8Z/exec';
+        const GIDS = { team: '0', polls: '1044546960', comments: '194206114' };
 
         function handleLogin() {
-            const name = document.getElementById('user-name').value;
-            const group = document.getElementById('user-group').value.toUpperCase();
-            if(name.length > 2 && group.includes('-')) {
+            const u = document.getElementById('user-name').value;
+            const g = document.getElementById('user-group').value.toUpperCase();
+            if(u.length > 2 && g.includes('-')) {
                 document.getElementById('login-sound').play();
-                localStorage.setItem('aec_u', name);
-                localStorage.setItem('aec_g', group);
-                document.getElementById('auth-screen').style.opacity = '0';
-                setTimeout(() => showApp(name, group), 600);
+                localStorage.setItem('aec_u', u); localStorage.setItem('aec_g', g);
+                document.getElementById('auth-screen').style.transform = 'translateY(-100%)';
+                setTimeout(() => showApp(u, g), 600);
             }
         }
 
-        function showApp(name, group) {
+        function showApp(u, g) {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
-            document.getElementById('display-name').innerText = name;
-            document.getElementById('display-group').innerText = group;
-            loadData();
+            document.getElementById('display-name').innerText = u;
+            document.getElementById('display-group').innerText = g;
+            loadData(); loadPolls(); loadComments();
+        }
+
+        async function loadData() {
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.team}`;
+            const res = await fetch(url); const text = await res.text();
+            const json = JSON.parse(text.substring(47).slice(0, -2));
+            const rows = json.table.rows;
+
+            // TEAM
+            document.getElementById('team-list').innerHTML = rows.slice(1).map(r => r.c[0]?.v ? `
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center font-black mb-4">${r.c[0].v.charAt(0)}</div>
+                    <h3 class="font-black text-lg mb-1">${r.c[0].v}</h3>
+                    <p class="text-[9px] font-black text-blue-500 uppercase mb-4 tracking-widest">${r.c[1]?.v || ''}</p>
+                    <p class="opacity-50 text-[11px] italic leading-relaxed">"${r.c[2]?.v || 'АЭК — будущее Казахстана'}"</p>
+                </div>` : '').join('');
+
+            // RATING (SORTED)
+            const sorted = rows.slice(1).filter(r => r.c[4]?.v).map(r => ({n: r.c[4].v, s: r.c[5]?.v || 0})).sort((a,b)=>b.s - a.s);
+            document.getElementById('leaderboard').innerHTML = sorted.map((p, i) => `
+                <div class="flex justify-between items-center p-5 rounded-3xl ${i==0 ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200' : 'bg-slate-50 dark:bg-slate-900/40'}">
+                    <div class="flex items-center gap-4">
+                        <span class="w-8 h-8 flex items-center justify-center font-black ${i==0?'text-amber-500 text-lg':'opacity-20'}">${i==0?'<i class="fas fa-crown"></i>':i+1}</span>
+                        <span class="font-bold text-xs">${p.n}</span>
+                    </div>
+                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl font-black text-[9px]">${p.s} Б</span>
+                </div>`).join('');
+
+            // QUESTS
+            document.getElementById('quests-list').innerHTML = rows.slice(1).filter(r => r.c[7]?.v).map(r => `
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl flex justify-between items-center border border-slate-100 dark:border-slate-700">
+                    <span class="font-bold text-sm">${r.c[7].v}</span>
+                    <span class="text-emerald-500 font-black text-sm">+${r.c[8]?.v || 0} Б</span>
+                </div>`).join('');
+        }
+
+        async function loadPolls() {
+            const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.polls}`);
+            const text = await res.text(); const json = JSON.parse(text.substring(47).slice(0, -2));
+            const poll = json.table.rows.find(r => r.c[3]?.v === 'active');
+            if(poll) {
+                document.getElementById('poll-question').innerText = poll.c[0].v;
+                document.getElementById('poll-options').innerHTML = [poll.c[1].v, poll.c[2].v].map(o => `
+                    <button onclick="this.innerHTML='✓ Принято'; this.disabled=true;" class="w-full p-4 rounded-2xl border-2 border-slate-100 dark:border-slate-700 text-left font-bold text-sm hover:border-blue-500 transition-all">${o}</button>
+                `).join('');
+            }
+        }
+
+        async function loadComments() {
+            const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.comments}`);
+            const text = await res.text(); const json = JSON.parse(text.substring(47).slice(0, -2));
+            const list = document.getElementById('comments-list');
+            list.innerHTML = json.table.rows.slice(1).reverse().map(r => `
+                <div class="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <div class="flex justify-between mb-1">
+                        <span class="font-black text-[10px] text-blue-600 uppercase">${r.c[1]?.v}</span>
+                        <span class="opacity-30 text-[9px]">${r.c[2]?.v}</span>
+                    </div>
+                    <p class="text-xs opacity-80">${r.c[3]?.v}</p>
+                </div>`).join('') || '<p class="text-center opacity-20 text-[10px]">Тишина...</p>';
+        }
+
+        async function sendComment() {
+            const input = document.getElementById('comment-input');
+            const btn = document.querySelector('[onclick="sendComment()"]');
+            if(!input.value) return;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+            const data = { name: localStorage.getItem('aec_u'), group: localStorage.getItem('aec_g'), text: input.value };
+            
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) });
+                input.value = ''; loadComments();
+            } catch(e) { alert('Ошибка сети!'); }
+            btn.innerHTML = '<i class="fas fa-paper-plane"></i>'; btn.disabled = false;
         }
 
         function toggleDark() {
@@ -144,50 +234,6 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-'+id).classList.add('active');
             window.scrollTo({top: 0, behavior: 'smooth'});
-        }
-
-        async function loadData() {
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&t=${Date.now()}`;
-            const res = await fetch(url);
-            const text = await res.text();
-            const json = JSON.parse(text.substring(47).slice(0, -2));
-            const rows = json.table.rows;
-
-            // КОМАНДА
-            document.getElementById('team-list').innerHTML = rows.slice(1).map(r => {
-                if(!r.c[0]?.v) return '';
-                return `
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-[45px] shadow-sm hover:shadow-xl transition-all border border-gray-100 dark:border-slate-700">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center font-black">${r.c[0].v.charAt(0)}</div>
-                        <div>
-                            <h3 class="font-black text-lg leading-none">${r.c[0].v}</h3>
-                            <p class="text-[9px] font-black text-blue-500 uppercase mt-1 tracking-tighter">${r.c[1]?.v || ''}</p>
-                        </div>
-                    </div>
-                    <p class="opacity-50 text-xs leading-relaxed italic">"${r.c[2]?.v || 'АЭК — сила в единстве!'}"</p>
-                </div>`;
-            }).join('');
-
-            // РЕЙТИНГ
-            const sorted = rows.slice(1).filter(r => r.c[4]?.v).map(r => ({ n: r.c[4].v, s: r.c[5]?.v || 0 })).sort((a,b)=>b.s - a.s);
-            document.getElementById('leaderboard').innerHTML = sorted.map((p, i) => `
-                <div class="flex justify-between items-center p-6 rounded-[30px] ${i==0 ? 'bg-amber-50 dark:bg-amber-900/20 border border-amber-200' : 'bg-gray-50 dark:bg-slate-900/40'}">
-                    <div class="flex items-center gap-4">
-                        <span class="w-8 h-8 flex items-center justify-center font-black ${i==0 ? 'text-amber-500' : 'opacity-20'}">
-                            ${i==0 ? '<i class="fas fa-crown"></i>' : i+1}
-                        </span>
-                        <span class="font-bold text-sm">${p.n}</span>
-                    </div>
-                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl font-black text-[10px] shadow-md">${p.s} БАЛЛОВ</span>
-                </div>`).join('');
-
-            // КВЕСТЫ
-            document.getElementById('quests-list').innerHTML = rows.slice(1).filter(r => r.c[7]?.v).map(r => `
-                <div class="bg-white dark:bg-slate-800 p-7 rounded-[35px] shadow-sm border border-gray-100 dark:border-slate-700 flex justify-between items-center hover:scale-[1.02] transition-all">
-                    <h4 class="font-bold text-sm">${r.c[7].v}</h4>
-                    <span class="text-emerald-500 font-black text-sm">+${r.c[8]?.v || 0} Б</span>
-                </div>`).join('');
         }
 
         window.onload = () => {
