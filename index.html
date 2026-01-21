@@ -3,131 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>АЭК | ПОРТАЛ КДМ</title>
+    <title>AEC Portal | Элегантность и Порядок</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>tailwind.config = { darkMode: 'class' }</script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
         
-        /* Адаптивный масштаб текста */
-        html { font-size: 15px; } 
-        @media (min-width: 768px) { html { font-size: 16px; } }
-        @media (min-width: 1024px) { html { font-size: 18px; } }
-
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         
-        /* Анимация вкладок */
-        .tab-content { display: none; animation: fadeInUp 0.4s ease-out forwards; }
-        .tab-content.active { display: block; }
-        
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Прогресс-бар голосования */
-        .poll-bar {
-            position: absolute; left: 0; top: 0; bottom: 0;
-            background: rgba(37, 99, 235, 0.15);
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: 0;
-        }
+        .glass-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .poll-progress { transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        /* Стили чата */
-        #comments-list::-webkit-scrollbar { width: 4px; }
-        #comments-list::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 10px; }
-
-        .glass-nav { 
-            backdrop-filter: blur(15px); 
-            background: rgba(30, 64, 175, 0.9); 
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .dark .glass-nav { background: rgba(15, 23, 42, 0.95); }
+        .active-nav-btn { background: #2563eb !important; color: white !important; shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4); }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 transition-colors duration-300">
+<body class="bg-[#f8fafc] dark:bg-[#020617] text-slate-900 dark:text-slate-100 min-h-screen">
 
-    <audio id="login-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
-
-    <div id="auth-screen" class="fixed inset-0 z-[100] bg-[#020617] flex items-center justify-center p-6 transition-all duration-700">
-        <div class="w-full max-w-md text-center">
-            <div class="mb-6 lg:mb-10 inline-block p-6 lg:p-8 bg-blue-600 rounded-[30px] lg:rounded-[40px] shadow-2xl animate-bounce">
-                <i class="fas fa-university text-4xl lg:text-6xl text-white"></i>
+    <div id="auth-screen" class="fixed inset-0 z-[100] bg-slate-900 flex items-center justify-center p-6 transition-transform duration-700">
+        <div class="w-full max-w-md bg-white/10 glass-blur p-10 rounded-[40px] border border-white/20 text-center shadow-2xl">
+            <div class="w-20 h-20 bg-blue-600 rounded-3xl mx-auto mb-6 flex items-center justify-center shadow-lg shadow-blue-500/50">
+                <i class="fas fa-mountain-sun text-3xl text-white"></i>
             </div>
-            <h2 class="text-white text-3xl lg:text-4xl font-black mb-8 lg:mb-10 tracking-widest italic uppercase">АЭК ПОРТАЛ</h2>
-            <div class="space-y-3 lg:space-y-4">
-                <input type="text" id="user-name" placeholder="Имя и Фамилия" class="w-full p-4 lg:p-6 rounded-[20px] lg:rounded-[30px] bg-white/5 border-2 border-white/10 text-white outline-none focus:border-blue-500 text-center font-bold text-lg">
-                <input type="text" id="user-group" placeholder="Группа (напр. ИС 2-1)" class="w-full p-4 lg:p-6 rounded-[20px] lg:rounded-[30px] bg-white/5 border-2 border-white/10 text-white outline-none focus:border-blue-500 text-center font-bold uppercase tracking-widest text-lg">
+            <h1 class="text-white text-3xl font-extrabold mb-2 italic uppercase">AEC Portal</h1>
+            <p class="text-blue-200 text-sm mb-8 font-medium">Твоя связь с КДМ</p>
+            <div class="space-y-4">
+                <input type="text" id="user-name" placeholder="Имя Фамилия" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 outline-none focus:border-blue-500 text-center transition-all">
+                <input type="text" id="user-group" placeholder="ИС 2-1" class="w-full p-5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-white/30 outline-none focus:border-blue-500 text-center uppercase transition-all">
+                <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-5 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all">Начать работу</button>
             </div>
-            <button onclick="handleLogin()" class="w-full mt-8 lg:mt-10 bg-blue-600 text-white py-4 lg:py-6 rounded-[20px] lg:rounded-[30px] font-black text-xl lg:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl">ВОЙТИ</button>
         </div>
     </div>
 
-    <div id="main-app" class="hidden min-h-screen">
-        <header class="fixed top-0 left-0 right-0 z-50 glass-nav text-white px-4 lg:px-8 py-3 lg:py-5">
-            <div class="max-w-7xl mx-auto flex justify-between items-center">
-                <div class="flex items-center gap-3 lg:gap-4">
-                    <div class="w-10 h-10 lg:w-14 lg:h-14 bg-white text-blue-700 rounded-xl lg:rounded-2xl flex items-center justify-center font-black text-lg lg:text-2xl shadow-xl">А</div>
+    <div id="main-app" class="hidden opacity-0 transition-opacity duration-500">
+        <header class="fixed top-0 left-0 right-0 z-50 glass-blur bg-white/70 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 px-6 py-4">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="w-11 h-11 bg-gradient-to-tr from-blue-600 to-indigo-600 text-white rounded-xl flex items-center justify-center font-bold shadow-lg shadow-blue-500/20">А</div>
                     <div>
-                        <p id="display-name" class="font-black text-base lg:text-xl leading-none truncate max-w-[150px]">Загрузка...</p>
-                        <p id="display-group" class="text-[10px] opacity-60 font-black uppercase tracking-widest mt-1">Группа</p>
+                        <h2 id="display-name" class="font-bold text-sm lg:text-base leading-tight">...</h2>
+                        <span id="display-group" class="text-[10px] uppercase font-extrabold text-blue-600 tracking-widest">...</span>
                     </div>
                 </div>
-                <button onclick="toggleDark()" class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl lg:rounded-2xl bg-white/10 hover:bg-white/20 transition flex items-center justify-center text-xl lg:text-2xl">
-                    <i id="theme-icon" class="fas fa-moon"></i>
+                <button onclick="toggleDark()" class="p-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-100 dark:hover:bg-slate-700 transition-colors">
+                    <i id="theme-icon" class="fas fa-moon text-slate-600 dark:text-slate-300"></i>
                 </button>
             </div>
         </header>
 
-        <main class="pt-24 lg:pt-36 pb-10 px-4 lg:px-8 max-w-7xl mx-auto">
-            <div class="flex overflow-x-auto gap-3 lg:gap-4 mb-8 lg:mb-12 pb-2 no-scrollbar">
-                <button onclick="switchTab('voice')" class="tab-btn px-6 lg:px-10 py-3 lg:py-5 rounded-[15px] lg:rounded-[25px] bg-blue-600 text-white shadow-xl font-black text-xs lg:text-sm flex-shrink-0 transition-all active:scale-95">🗳️ ГОЛОС / ЧАТ</button>
-                <button onclick="switchTab('home')" class="tab-btn px-6 lg:px-10 py-3 lg:py-5 rounded-[15px] lg:rounded-[25px] bg-white dark:bg-slate-800 shadow-lg font-black text-xs lg:text-sm flex-shrink-0 dark:border-slate-700 transition-all active:scale-95 text-slate-500 dark:text-white">🏢 ОБ АЭК</button>
-                <button onclick="switchTab('rating')" class="tab-btn px-6 lg:px-10 py-3 lg:py-5 rounded-[15px] lg:rounded-[25px] bg-white dark:bg-slate-800 shadow-lg font-black text-xs lg:text-sm flex-shrink-0 dark:border-slate-700 transition-all active:scale-95 text-slate-500 dark:text-white">🏆 ЛИДЕРЫ</button>
-                <button onclick="switchTab('team')" class="tab-btn px-6 lg:px-10 py-3 lg:py-5 rounded-[15px] lg:rounded-[25px] bg-white dark:bg-slate-800 shadow-lg font-black text-xs lg:text-sm flex-shrink-0 dark:border-slate-700 transition-all active:scale-95 text-slate-500 dark:text-white">👥 КДМ</button>
+        <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-2xl">
+            <div class="bg-white/90 dark:bg-slate-800/90 glass-blur p-2 rounded-[30px] border border-slate-200 dark:border-slate-700 shadow-2xl flex justify-between gap-1 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('voice')" class="nav-btn px-5 py-3 rounded-2xl text-xs font-bold transition-all active-nav-btn flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-vote-yea"></i> <span>Голос</span>
+                </button>
+                <button onclick="switchTab('quests')" class="nav-btn px-5 py-3 rounded-2xl text-xs font-bold transition-all text-slate-500 flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-bolt"></i> <span>Задания</span>
+                </button>
+                <button onclick="switchTab('rating')" class="nav-btn px-5 py-3 rounded-2xl text-xs font-bold transition-all text-slate-500 flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-award"></i> <span>Топ</span>
+                </button>
+                <button onclick="switchTab('team')" class="nav-btn px-5 py-3 rounded-2xl text-xs font-bold transition-all text-slate-500 flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-users"></i> <span>КДМ</span>
+                </button>
+                <button onclick="switchTab('home')" class="nav-btn px-5 py-3 rounded-2xl text-xs font-bold transition-all text-slate-500 flex items-center gap-2 flex-shrink-0">
+                    <i class="fas fa-info-circle"></i> <span>АЭК</span>
+                </button>
             </div>
+        </nav>
 
-            <section id="tab-voice" class="tab-content active grid lg:grid-cols-2 gap-6 lg:gap-10">
-                <div class="bg-white dark:bg-slate-800 p-6 lg:p-10 rounded-[30px] lg:rounded-[50px] shadow-xl border border-slate-100 dark:border-slate-700">
-                    <div class="flex items-center gap-2 mb-6 lg:mb-8">
-                        <span class="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-full animate-pulse uppercase">Live</span>
-                        <h3 class="font-black text-xl lg:text-3xl uppercase italic tracking-tighter">Опрос недели</h3>
+        <main class="pt-28 pb-32 px-6 max-w-6xl mx-auto">
+            
+            <section id="tab-voice" class="tab-content active space-y-8">
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-100 dark:border-slate-700">
+                    <div class="flex items-center gap-2 mb-6 text-red-500 uppercase font-black text-[10px] tracking-widest">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span> Активно сейчас
                     </div>
-                    <h4 id="poll-question" class="text-lg lg:text-2xl font-bold text-blue-600 dark:text-blue-400 mb-6 lg:mb-10 leading-tight italic truncate-multiline">...</h4>
-                    <div id="poll-options" class="space-y-3 lg:space-y-4"></div>
+                    <h3 id="poll-question" class="text-2xl font-bold mb-8 leading-tight italic">...</h3>
+                    <div id="poll-options" class="grid gap-4"></div>
                 </div>
 
-                <div class="bg-white dark:bg-slate-800 p-6 lg:p-10 rounded-[30px] lg:rounded-[50px] shadow-xl border border-slate-100 dark:border-slate-700 flex flex-col h-[500px] lg:h-[650px]">
-                    <h3 class="font-black text-xl lg:text-3xl mb-6 lg:mb-8 uppercase italic"><i class="fas fa-comments mr-2 text-blue-500"></i> Прямой эфир</h3>
-                    <div id="comments-list" class="flex-1 overflow-y-auto pr-2 mb-4 space-y-3 no-scrollbar">
-                        <p class="text-center opacity-20 text-xs italic">Загрузка мнений...</p>
-                    </div>
-                    <div class="relative">
-                        <input type="text" id="comment-input" placeholder="Напиши что-нибудь..." class="w-full p-4 lg:p-6 rounded-[20px] lg:rounded-[30px] bg-slate-100 dark:bg-slate-900 border-none outline-none focus:ring-2 ring-blue-500/30 text-base font-medium pr-14 lg:pr-20">
-                        <button onclick="sendComment()" class="absolute right-2 top-2 bottom-2 bg-blue-600 text-white w-10 lg:w-14 rounded-[15px] lg:rounded-full hover:bg-blue-700 transition-all flex items-center justify-center">
-                            <i class="fas fa-paper-plane text-sm lg:text-base"></i>
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-black text-xl uppercase italic tracking-widest px-2">Стена мнений</h3>
+                    <div id="comments-list" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 no-scrollbar"></div>
+                    <div class="relative mt-4 group">
+                        <input type="text" id="comment-input" placeholder="Твое мнение..." class="w-full p-6 rounded-[30px] bg-white dark:bg-slate-800 border-none shadow-xl outline-none focus:ring-2 ring-blue-500 transition-all text-lg pr-16">
+                        <button onclick="sendComment()" class="absolute right-3 top-3 bottom-3 w-14 bg-blue-600 text-white rounded-2xl shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center">
+                            <i class="fas fa-paper-plane"></i>
                         </button>
                     </div>
                 </div>
             </section>
 
-            <section id="tab-home" class="tab-content">
-                <div class="bg-blue-700 p-8 lg:p-12 rounded-[30px] lg:rounded-[60px] text-white shadow-2xl relative overflow-hidden">
-                    <h2 class="text-2xl lg:text-5xl font-black mb-4 lg:mb-6 italic uppercase">АЭК: Путь к успеху</h2>
-                    <p class="text-base lg:text-xl opacity-90 leading-relaxed max-w-2xl">Алматинский Экономический Колледж — твоя база для мощного старта. Мы ценим каждого студента.</p>
-                </div>
+            <section id="tab-quests" class="tab-content">
+                <h3 class="font-black text-2xl mb-8 uppercase italic italic">Активные задания</h3>
+                <div id="quests-list" class="grid gap-4"></div>
             </section>
 
             <section id="tab-rating" class="tab-content">
-                <div class="bg-white dark:bg-slate-800 p-6 lg:p-12 rounded-[30px] lg:rounded-[60px] shadow-xl max-w-3xl mx-auto" id="leaderboard"></div>
+                <div id="leaderboard" class="bg-white dark:bg-slate-800 p-8 rounded-[45px] shadow-xl border border-slate-100 dark:border-slate-700 max-w-2xl mx-auto"></div>
             </section>
 
             <section id="tab-team" class="tab-content">
-                <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8"></div>
+                <div id="team-list" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             </section>
+
+            <section id="tab-home" class="tab-content">
+                <div class="bg-blue-600 p-10 rounded-[50px] text-white shadow-2xl mb-8 relative overflow-hidden">
+                    <h2 class="text-4xl font-black mb-6 italic">АЭК — ТВОЙ ВЫБОР</h2>
+                    <p class="text-lg opacity-90 leading-relaxed">Алматинский Экономический Колледж готовит лидеров. Мы объединяем традиции и инновации.</p>
+                    <i class="fas fa-university absolute -right-10 -bottom-10 text-[12rem] opacity-10"></i>
+                </div>
+            </section>
+
         </main>
     </div>
 
@@ -140,144 +135,146 @@
             const u = document.getElementById('user-name').value;
             const g = document.getElementById('user-group').value.toUpperCase();
             if(u.length > 2) {
-                document.getElementById('login-sound').play();
                 localStorage.setItem('aec_u', u); localStorage.setItem('aec_g', g);
-                document.getElementById('auth-screen').style.opacity = '0';
+                document.getElementById('auth-screen').style.transform = 'translateY(-100%)';
                 setTimeout(() => {
                     document.getElementById('auth-screen').classList.add('hidden');
                     document.getElementById('main-app').classList.remove('hidden');
+                    document.getElementById('main-app').style.opacity = '1';
                     document.getElementById('display-name').innerText = u;
                     document.getElementById('display-group').innerText = g;
-                    initApp();
+                    loadAllData();
                 }, 600);
             }
         }
 
-        function initApp() {
-            loadPolls(); loadComments(); loadData();
-            setInterval(loadComments, 5000);
+        async function loadAllData() {
+            loadPolls();
+            loadComments();
+            loadSheetData();
+            setInterval(loadComments, 8000); 
         }
 
         async function loadPolls() {
             const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.polls}&t=${Date.now()}`);
-            const text = await res.text(); const json = JSON.parse(text.substring(47).slice(0, -2));
+            const text = await res.text();
+            const json = JSON.parse(text.substring(47).slice(0, -2));
             const poll = json.table.rows.find(r => r.c[3]?.v === 'active');
             
             if(poll) {
                 const v1 = poll.c[4]?.v || 0; const v2 = poll.c[5]?.v || 0;
                 const total = v1 + v2 || 1;
                 const p1 = Math.round((v1/total)*100); const p2 = 100 - p1;
-
                 document.getElementById('poll-question').innerText = poll.c[0].v;
                 document.getElementById('poll-options').innerHTML = `
-                    <button onclick="submitVote(1)" class="w-full p-5 lg:p-8 rounded-[20px] lg:rounded-[35px] border-2 lg:border-4 border-slate-100 dark:border-slate-700 text-left font-black text-base lg:text-xl relative overflow-hidden transition-all active:scale-95">
-                        <div class="poll-bar" style="width:${p1}%"></div>
-                        <span class="relative z-10 flex justify-between uppercase italic">${poll.c[1].v} <span>${p1}%</span></span>
+                    <button onclick="vote(1)" class="relative w-full p-6 rounded-3xl border-2 border-slate-100 dark:border-slate-700 text-left font-bold overflow-hidden transition-all active:scale-[0.98]">
+                        <div class="poll-progress absolute left-0 top-0 bottom-0 bg-blue-500/10" style="width:${p1}%"></div>
+                        <div class="relative flex justify-between"><span>${poll.c[1].v}</span> <span>${p1}%</span></div>
                     </button>
-                    <button onclick="submitVote(2)" class="w-full p-5 lg:p-8 rounded-[20px] lg:rounded-[35px] border-2 lg:border-4 border-slate-100 dark:border-slate-700 text-left font-black text-base lg:text-xl relative overflow-hidden transition-all active:scale-95">
-                        <div class="poll-bar" style="width:${p2}%"></div>
-                        <span class="relative z-10 flex justify-between uppercase italic">${poll.c[2].v} <span>${p2}%</span></span>
+                    <button onclick="vote(2)" class="relative w-full p-6 rounded-3xl border-2 border-slate-100 dark:border-slate-700 text-left font-bold overflow-hidden transition-all active:scale-[0.98]">
+                        <div class="poll-progress absolute left-0 top-0 bottom-0 bg-blue-500/10" style="width:${p2}%"></div>
+                        <div class="relative flex justify-between"><span>${poll.c[2].v}</span> <span>${p2}%</span></div>
                     </button>
                 `;
             }
         }
 
-        async function submitVote(opt) {
-            const btns = document.querySelectorAll('#poll-options button');
-            btns.forEach(b => { b.style.opacity = '0.5'; b.disabled = true; });
+        async function vote(opt) {
             await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ type: "vote", option: opt }) });
-            setTimeout(loadPolls, 800);
+            setTimeout(loadPolls, 500);
         }
 
         async function loadComments() {
             const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.comments}&t=${Date.now()}`);
-            const text = await res.text(); const json = JSON.parse(text.substring(47).slice(0, -2));
+            const text = await res.text();
+            const json = JSON.parse(text.substring(47).slice(0, -2));
             const html = json.table.rows.slice(1).reverse().map(r => `
-                <div class="bg-slate-50 dark:bg-slate-900/60 p-4 lg:p-6 rounded-[20px] lg:rounded-[30px] border border-slate-100 dark:border-slate-800 shadow-sm animate-fadeIn">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="font-black text-[10px] lg:text-xs text-blue-600 uppercase tracking-tighter">${r.c[1]?.v || 'Студент'}</span>
-                        <span class="text-[9px] font-bold opacity-30">${r.c[2]?.v || ''}</span>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-[30px] shadow-sm border border-slate-50 dark:border-slate-700 transition-all">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-blue-600 font-black text-xs uppercase">${r.c[1]?.v}</span>
+                        <span class="text-[9px] opacity-30 font-bold uppercase">${r.c[2]?.v}</span>
                     </div>
-                    <p class="text-sm lg:text-base font-medium leading-snug">${r.c[3]?.v || ''}</p>
+                    <p class="text-sm font-medium leading-relaxed">${r.c[3]?.v}</p>
                 </div>`).join('');
-            document.getElementById('comments-list').innerHTML = html || '<p class="text-center opacity-20 text-xs italic">Пока сообщений нет...</p>';
+            document.getElementById('comments-list').innerHTML = html || '<p class="text-center opacity-20 italic">Будь первым на стене!</p>';
         }
 
         async function sendComment() {
             const input = document.getElementById('comment-input');
-            const btn = document.querySelector('[onclick="sendComment()"]');
-            if(!input.value.trim() || btn.disabled) return;
-            
-            const msg = input.value; input.value = '';
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
-            
-            await fetch(SCRIPT_URL, { 
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({ type: "comment", name: localStorage.getItem('aec_u'), group: localStorage.getItem('aec_g'), text: msg }) 
-            });
-            
-            btn.innerHTML = '<i class="fas fa-paper-plane"></i>'; btn.disabled = false;
+            if(!input.value.trim()) return;
+            const data = { type: "comment", name: localStorage.getItem('aec_u'), group: localStorage.getItem('aec_g'), text: input.value };
+            input.value = '';
+            await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
             loadComments();
         }
 
-        async function loadData() {
+        async function loadSheetData() {
             const res = await fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${GIDS.team}`);
-            const text = await res.text(); const json = JSON.parse(text.substring(47).slice(0, -2));
+            const text = await res.text();
+            const json = JSON.parse(text.substring(47).slice(0, -2));
             const rows = json.table.rows;
 
+            // QUESTS
+            document.getElementById('quests-list').innerHTML = rows.slice(1).filter(r => r.c[7]?.v).map(r => `
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-[30px] border border-slate-100 dark:border-slate-700 flex justify-between items-center group">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 rounded-2xl flex items-center justify-center font-bold">Q</div>
+                        <span class="font-bold text-sm">${r.c[7].v}</span>
+                    </div>
+                    <span class="text-emerald-500 font-black text-sm bg-emerald-50 dark:bg-emerald-900/20 px-4 py-2 rounded-xl">+${r.c[8]?.v} Б</span>
+                </div>`).join('');
+
+            // TEAM
             document.getElementById('team-list').innerHTML = rows.slice(1).map(r => r.c[0]?.v ? `
-                <div class="bg-white dark:bg-slate-800 p-6 lg:p-8 rounded-[30px] lg:rounded-[40px] shadow-md border border-slate-100 dark:border-slate-700">
-                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center font-black text-xl mb-4 shadow-inner">${r.c[0].v.charAt(0)}</div>
-                    <h3 class="font-black text-xl mb-1">${r.c[0].v}</h3>
-                    <p class="text-[10px] font-black text-blue-500 uppercase mb-4 tracking-widest">${r.c[1]?.v || ''}</p>
-                    <p class="opacity-50 text-xs italic leading-relaxed">"${r.c[2]?.v || 'КДМ — сила!'}"</p>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-sm border border-slate-50 dark:border-slate-700">
+                    <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/40 text-blue-600 rounded-2xl flex items-center justify-center font-black text-xl mb-5">${r.c[0].v.charAt(0)}</div>
+                    <h4 class="font-black text-lg mb-1">${r.c[0].v}</h4>
+                    <p class="text-[10px] text-blue-600 font-bold uppercase tracking-widest mb-4">${r.c[1]?.v}</p>
+                    <p class="text-xs opacity-50 italic">"${r.c[2]?.v}"</p>
                 </div>` : '').join('');
 
+            // RATING
             const sorted = rows.slice(1).filter(r => r.c[4]?.v).map(r => ({n: r.c[4].v, s: r.c[5]?.v || 0})).sort((a,b)=>b.s - a.s);
             document.getElementById('leaderboard').innerHTML = `
-                <h2 class="text-center font-black text-xl lg:text-2xl mb-6 lg:mb-10 uppercase italic">Топ Активистов</h2>
+                <h3 class="text-center font-black text-xl mb-8 uppercase italic italic">Лидеры рейтинга</h3>
                 <div class="space-y-3">${sorted.map((p, i) => `
-                <div class="flex justify-between items-center p-4 lg:p-5 rounded-[20px] lg:rounded-[30px] ${i==0 ? 'bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200' : 'bg-slate-50 dark:bg-slate-900/40'}">
-                    <div class="flex items-center gap-3 lg:gap-4">
-                        <span class="w-8 h-8 flex items-center justify-center font-black ${i==0?'text-amber-500 text-xl':'opacity-20 text-lg'}">${i==0?'<i class="fas fa-crown"></i>':i+1}</span>
-                        <span class="font-black text-sm lg:text-base">${p.n}</span>
+                <div class="flex justify-between items-center p-5 rounded-3xl ${i==0 ? 'bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 shadow-lg' : 'bg-slate-50 dark:bg-slate-900/40'}">
+                    <div class="flex items-center gap-4">
+                        <span class="font-black ${i==0?'text-amber-500 text-xl':'opacity-20'}">${i==0?'🏆':i+1}</span>
+                        <span class="font-bold text-sm">${p.n}</span>
                     </div>
-                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl font-black text-[10px] uppercase">${p.s} Б</span>
+                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl font-black text-[10px]">${p.s} Б</span>
                 </div>`).join('')}</div>`;
+        }
+
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-'+id).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('active-nav-btn');
+                b.classList.add('text-slate-500');
+            });
+            event.currentTarget.classList.add('active-nav-btn');
+            event.currentTarget.classList.remove('text-slate-500');
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         function toggleDark() {
             document.documentElement.classList.toggle('dark');
             const isDark = document.documentElement.classList.contains('dark');
             document.getElementById('theme-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
-            localStorage.setItem('aec_theme', isDark ? 'dark' : 'light');
-        }
-
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => {
-                b.classList.remove('bg-blue-600', 'text-white', 'shadow-xl');
-                b.classList.add('bg-white', 'dark:bg-slate-800', 'text-slate-500', 'dark:text-white');
-            });
-            
-            const activeBtn = document.querySelector(`[onclick="switchTab('${id}')"]`);
-            activeBtn.classList.remove('bg-white', 'dark:bg-slate-800', 'text-slate-500', 'dark:text-white');
-            activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-xl');
-            
-            document.getElementById('tab-'+id).classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         window.onload = () => {
-            if(localStorage.getItem('aec_theme') === 'dark') toggleDark();
-            const u = localStorage.getItem('aec_u'); const g = localStorage.getItem('aec_g');
+            const u = localStorage.getItem('aec_u');
             if(u) {
                 document.getElementById('auth-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('main-app').style.opacity = '1';
                 document.getElementById('display-name').innerText = u;
-                document.getElementById('display-group').innerText = g;
-                initApp();
-                switchTab('voice');
+                document.getElementById('display-group').innerText = localStorage.getItem('aec_g');
+                loadAllData();
             }
         }
     </script>
