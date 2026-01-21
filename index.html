@@ -2,26 +2,46 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>КДМ АЭК</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <header class="bg-blue-900 text-white py-10 text-center shadow-lg">
-        <h1 class="text-4xl font-black uppercase">Экономический Колледж</h1>
+<body>
+
+    <header class="bg-blue-800 text-white py-12 px-4 text-center shadow-lg mb-10">
+        <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tight">Экономический Колледж</h1>
+        <p class="mt-2 text-blue-200">Комитет по делам молодежи</p>
     </header>
 
-    <main class="max-w-6xl mx-auto py-10 px-4">
-        <div id="team-list" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"></div>
+    <main class="max-w-6xl mx-auto px-4 pb-20">
+        
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8 uppercase text-center tracking-widest">Активисты КДМ</h2>
+            <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            <div class="bg-white rounded-2xl shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4 text-blue-900 uppercase">Топ-10 Активистов</h2>
-                <div id="leaderboard"></div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div class="bg-blue-900 p-5">
+                    <h2 class="text-white font-bold text-center uppercase">Топ-10 Активистов</h2>
+                </div>
+                <div id="leaderboard" class="p-6 space-y-3">
+                    <p class="text-center text-gray-400">Загрузка...</p>
+                </div>
             </div>
 
-            <div class="bg-white rounded-2xl shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4 text-blue-900 uppercase">Квесты</h2>
-                <div id="quests-list"></div>
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+                <div class="bg-gray-100 p-5 border-b">
+                    <h2 class="text-blue-900 font-bold text-center uppercase">Квесты и задания</h2>
+                </div>
+                <div id="quests-list" class="p-6 space-y-4">
+                    <p class="text-center text-gray-400">Загрузка...</p>
+                </div>
             </div>
         </div>
     </main>
@@ -30,36 +50,48 @@
         const SHEET_ID = '1BEi1MzL4-2vTVGa_2yyYnVkkDcSch6GIZKeWUHRYFxY';
         
         async function load() {
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&t=${Date.now()}`;
-            const res = await fetch(url);
-            const text = await res.text();
-            const rows = JSON.parse(text.substring(47).slice(0, -2)).table.rows;
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&t=${Date.now()}`;
+                const res = await fetch(url);
+                const text = await res.text();
+                const json = JSON.parse(text.substring(47).slice(0, -2));
+                const rows = json.table.rows;
 
-            // 1. Команда (A, B, C)
-            document.getElementById('team-list').innerHTML = rows.slice(1)
-                .map(r => r.c[0]?.v ? `
-                <div class="bg-white p-6 rounded-xl shadow border-t-4 border-blue-600">
-                    <h3 class="font-bold">${r.c[0].v}</h3>
-                    <p class="text-blue-500 text-sm">${r.c[1]?.v || ''}</p>
-                </div>` : '').join('');
+                // 1. КОМАНДА (A, B, C)
+                const teamList = document.getElementById('team-list');
+                teamList.innerHTML = rows.slice(1).map(r => {
+                    if(!r.c[0] || !r.c[0].v) return '';
+                    return `
+                    <div class="bg-white p-8 rounded-2xl shadow-md border-b-4 border-blue-600 transition-transform hover:scale-105">
+                        <h3 class="text-xl font-black text-blue-900 mb-1">${r.c[0].v}</h3>
+                        <p class="text-blue-500 font-bold text-xs uppercase mb-3">${r.c[1] ? r.c[1].v : ''}</p>
+                        <p class="text-gray-600 italic text-sm border-t pt-3">"${r.c[2] ? r.c[2].v : 'АЭК — это сила!'}"</p>
+                    </div>`;
+                }).join('');
 
-            // 2. Рейтинг (E, F) - индекс 4 и 5
-            document.getElementById('leaderboard').innerHTML = rows.slice(1)
-                .map((r, i) => r.c[4]?.v ? `
-                <div class="flex justify-between p-3 border-b">
-                    <span>${i+1}. ${r.c[4].v}</span>
-                    <span class="font-bold text-blue-600">${r.c[5]?.v || 0} Б</span>
-                </div>` : '').join('');
+                // 2. РЕЙТИНГ (E, F)
+                const leaderboard = document.getElementById('leaderboard');
+                const ratingRows = rows.slice(1).filter(r => r.c[4] && r.c[4].v);
+                leaderboard.innerHTML = ratingRows.map((r, i) => `
+                    <div class="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
+                        <span class="font-bold text-gray-700">${i+1}. ${r.c[4].v}</span>
+                        <span class="bg-blue-600 text-white px-4 py-1 rounded-full font-black text-sm">${r.c[5] ? r.c[5].v : 0} Б</span>
+                    </div>`).join('');
 
-            // 3. Квесты (H, I) - индекс 7 и 8
-            document.getElementById('quests-list').innerHTML = rows.slice(1)
-                .map(r => r.c[7]?.v ? `
-                <div class="p-3 bg-gray-50 rounded mb-2 flex justify-between">
-                    <span>${r.c[7].v}</span>
-                    <span class="text-green-600 font-bold">+${r.c[8]?.v || 0}</span>
-                </div>` : '').join('');
+                // 3. КВЕСТЫ (H, I)
+                const questList = document.getElementById('quests-list');
+                const questRows = rows.slice(1).filter(r => r.c[7] && r.c[7].v);
+                questList.innerHTML = questRows.map(r => `
+                    <div class="flex justify-between items-center p-4 border-2 border-dashed border-gray-200 rounded-2xl">
+                        <span class="font-medium text-gray-800">${r.c[7].v}</span>
+                        <span class="text-green-600 font-black">+${r.c[8] ? r.c[8].v : 0} Б</span>
+                    </div>`).join('');
+
+            } catch (e) {
+                console.error("Ошибка:", e);
+            }
         }
-        load();
+        window.onload = load;
     </script>
 </body>
 </html>
