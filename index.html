@@ -3,53 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>КДМ АЭК</title>
+    <title>АЭК | Цифровая Экосистема</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background: #f0f4f8; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .auth-bg { background: radial-gradient(circle at top right, #1e40af, #000); }
     </style>
 </head>
 <body>
 
-    <header class="bg-blue-800 text-white py-12 px-4 text-center shadow-lg mb-10">
-        <h1 class="text-3xl md:text-5xl font-black uppercase tracking-tight">Экономический Колледж</h1>
-        <p class="mt-2 text-blue-200">Комитет по делам молодежи</p>
-    </header>
-
-    <main class="max-w-6xl mx-auto px-4 pb-20">
-        
-        <section class="mb-16">
-            <h2 class="text-2xl font-bold text-gray-800 mb-8 uppercase text-center tracking-widest">Активисты КДМ</h2>
-            <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                </div>
-        </section>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-                <div class="bg-blue-900 p-5">
-                    <h2 class="text-white font-bold text-center uppercase">Топ-10 Активистов</h2>
-                </div>
-                <div id="leaderboard" class="p-6 space-y-3">
-                    <p class="text-center text-gray-400">Загрузка...</p>
-                </div>
+    <div id="auth-screen" class="fixed inset-0 z-[100] auth-bg flex items-center justify-center p-4">
+        <div class="glass p-8 rounded-3xl w-full max-w-sm text-center shadow-2xl border border-white/20">
+            <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-lg">
+                <i class="fas fa-user-graduate text-white text-3xl"></i>
             </div>
-
-            <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
-                <div class="bg-gray-100 p-5 border-b">
-                    <h2 class="text-blue-900 font-bold text-center uppercase">Квесты и задания</h2>
-                </div>
-                <div id="quests-list" class="p-6 space-y-4">
-                    <p class="text-center text-gray-400">Загрузка...</p>
-                </div>
-            </div>
+            <h2 class="text-2xl font-black text-gray-800 mb-2">АЭК ПОРТАЛ</h2>
+            <p class="text-gray-500 text-sm mb-6">Введите данные для входа в систему</p>
+            
+            <input type="text" id="user-name" placeholder="Имя и Фамилия" 
+                   class="w-full mb-3 p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition">
+            
+            <input type="text" id="user-group" placeholder="Группа (напр. ИС 1-1)" 
+                   class="w-full mb-6 p-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none transition uppercase">
+            
+            <button onclick="handleLogin()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition active:scale-95 shadow-lg shadow-blue-200">
+                Войти в систему
+            </button>
+            <p id="auth-error" class="text-red-500 text-xs mt-4 hidden">Проверьте формат группы (напр. ИС 1-1)</p>
         </div>
-    </main>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <header class="bg-blue-800 text-white pt-10 pb-20 px-6 rounded-b-[40px] shadow-2xl relative">
+            <div class="max-w-6xl mx-auto flex justify-between items-center">
+                <div>
+                    <p class="text-blue-200 text-sm uppercase tracking-widest font-bold">С возвращением,</p>
+                    <h1 id="display-name" class="text-2xl font-black italic">Студент АЭК</h1>
+                </div>
+                <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
+                    <i class="fas fa-bell text-white"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto px-4 -mt-10">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <button onclick="switchTab('team')" class="glass p-6 rounded-3xl shadow-sm border border-white flex flex-col items-center hover:bg-blue-50 transition active:scale-95">
+                    <i class="fas fa-users text-blue-600 text-2xl mb-2"></i>
+                    <span class="font-bold text-gray-700 text-xs uppercase">КДМ</span>
+                </button>
+                <button onclick="switchTab('rating')" class="glass p-6 rounded-3xl shadow-sm border border-white flex flex-col items-center hover:bg-blue-50 transition active:scale-95">
+                    <i class="fas fa-trophy text-yellow-500 text-2xl mb-2"></i>
+                    <span class="font-bold text-gray-700 text-xs uppercase">Рейтинг</span>
+                </button>
+                <button onclick="switchTab('quests')" class="glass p-6 rounded-3xl shadow-sm border border-white flex flex-col items-center hover:bg-blue-50 transition active:scale-95">
+                    <i class="fas fa-tasks text-green-500 text-2xl mb-2"></i>
+                    <span class="font-bold text-gray-700 text-xs uppercase">Задания</span>
+                </button>
+                <button onclick="switchTab('chat')" class="glass p-6 rounded-3xl shadow-sm border border-white flex flex-col items-center hover:bg-blue-50 transition active:scale-95">
+                    <i class="fas fa-comments text-purple-500 text-2xl mb-2"></i>
+                    <span class="font-bold text-gray-700 text-xs uppercase">Голос</span>
+                </button>
+            </div>
+
+            <section id="tab-team" class="tab-content active">
+                <h2 class="text-xl font-black text-gray-800 mb-6 uppercase tracking-tighter">Активисты КДМ</h2>
+                <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <section id="tab-rating" class="tab-content">
+                <h2 class="text-xl font-black text-gray-800 mb-6 uppercase tracking-tighter">Лидеры недели</h2>
+                <div class="bg-white rounded-3xl shadow-xl p-6" id="leaderboard"></div>
+            </section>
+
+            <section id="tab-quests" class="tab-content">
+                <h2 class="text-xl font-black text-gray-800 mb-6 uppercase tracking-tighter">Доступные квесты</h2>
+                <div class="grid gap-4" id="quests-list"></div>
+            </section>
+
+            <section id="tab-chat" class="tab-content text-center py-10">
+                <div class="bg-white p-8 rounded-3xl shadow-xl">
+                    <i class="fas fa-tools text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold">Раздел в разработке</h3>
+                    <p class="text-gray-500">Здесь скоро появятся опросы и чаты</p>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script>
         const SHEET_ID = '1BEi1MzL4-2vTVGa_2yyYnVkkDcSch6GIZKeWUHRYFxY';
         
-        async function load() {
+        // 1. ЛОГИКА АВТОРИЗАЦИИ
+        function handleLogin() {
+            const name = document.getElementById('user-name').value;
+            const group = document.getElementById('user-group').value;
+            const error = document.getElementById('auth-error');
+
+            // Регулярное выражение для проверки групп (Буквы Пробел Цифра-Цифра)
+            const groupPattern = /^[A-ZА-ЯЁ]+\s\d-\d$/i;
+
+            if(name.length > 2 && groupPattern.test(group)) {
+                localStorage.setItem('aec_user', name);
+                localStorage.setItem('aec_group', group);
+                showApp(name);
+            } else {
+                error.classList.remove('hidden');
+            }
+        }
+
+        function showApp(name) {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('display-name').innerText = name;
+            loadData();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        // Проверка при загрузке
+        window.onload = () => {
+            const savedUser = localStorage.getItem('aec_user');
+            if(savedUser) showApp(savedUser);
+        };
+
+        // 2. ЗАГРУЗКА ДАННЫХ
+        async function loadData() {
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&t=${Date.now()}`;
                 const res = await fetch(url);
@@ -57,41 +145,41 @@
                 const json = JSON.parse(text.substring(47).slice(0, -2));
                 const rows = json.table.rows;
 
-                // 1. КОМАНДА (A, B, C)
-                const teamList = document.getElementById('team-list');
-                teamList.innerHTML = rows.slice(1).map(r => {
+                // Команда
+                document.getElementById('team-list').innerHTML = rows.slice(1).map(r => {
                     if(!r.c[0] || !r.c[0].v) return '';
                     return `
-                    <div class="bg-white p-8 rounded-2xl shadow-md border-b-4 border-blue-600 transition-transform hover:scale-105">
-                        <h3 class="text-xl font-black text-blue-900 mb-1">${r.c[0].v}</h3>
-                        <p class="text-blue-500 font-bold text-xs uppercase mb-3">${r.c[1] ? r.c[1].v : ''}</p>
-                        <p class="text-gray-600 italic text-sm border-t pt-3">"${r.c[2] ? r.c[2].v : 'АЭК — это сила!'}"</p>
+                    <div class="glass p-6 rounded-3xl shadow-sm border border-white hover:shadow-md transition">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full mb-4 flex items-center justify-center text-blue-600 font-bold">
+                            ${r.c[0].v.charAt(0)}
+                        </div>
+                        <h3 class="font-bold text-gray-800 text-lg">${r.c[0].v}</h3>
+                        <p class="text-blue-500 text-xs font-bold uppercase mb-2">${r.c[1]?.v || ''}</p>
+                        <p class="text-gray-500 text-xs italic">"${r.c[2]?.v || 'Вместе за АЭК!'}"</p>
                     </div>`;
                 }).join('');
 
-                // 2. РЕЙТИНГ (E, F)
-                const leaderboard = document.getElementById('leaderboard');
+                // Рейтинг
                 const ratingRows = rows.slice(1).filter(r => r.c[4] && r.c[4].v);
-                leaderboard.innerHTML = ratingRows.map((r, i) => `
-                    <div class="flex justify-between items-center p-4 bg-blue-50 rounded-xl">
-                        <span class="font-bold text-gray-700">${i+1}. ${r.c[4].v}</span>
-                        <span class="bg-blue-600 text-white px-4 py-1 rounded-full font-black text-sm">${r.c[5] ? r.c[5].v : 0} Б</span>
+                document.getElementById('leaderboard').innerHTML = ratingRows.map((r, i) => `
+                    <div class="flex justify-between items-center p-4 mb-2 bg-gray-50 rounded-2xl border border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <span class="w-8 h-8 flex items-center justify-center font-black ${i==0 ? 'text-yellow-500' : 'text-gray-400'}">${i+1}</span>
+                            <span class="font-semibold text-gray-700">${r.c[4].v}</span>
+                        </div>
+                        <span class="bg-blue-600 text-white px-4 py-1 rounded-full font-black text-xs">${r.c[5]?.v || 0} Б</span>
                     </div>`).join('');
 
-                // 3. КВЕСТЫ (H, I)
-                const questList = document.getElementById('quests-list');
+                // Квесты
                 const questRows = rows.slice(1).filter(r => r.c[7] && r.c[7].v);
-                questList.innerHTML = questRows.map(r => `
-                    <div class="flex justify-between items-center p-4 border-2 border-dashed border-gray-200 rounded-2xl">
-                        <span class="font-medium text-gray-800">${r.c[7].v}</span>
-                        <span class="text-green-600 font-black">+${r.c[8] ? r.c[8].v : 0} Б</span>
+                document.getElementById('quests-list').innerHTML = questRows.map(r => `
+                    <div class="glass p-5 rounded-2xl border border-dashed border-gray-300 flex justify-between items-center">
+                        <span class="font-semibold text-gray-700 text-sm">${r.c[7].v}</span>
+                        <span class="text-green-600 font-black">+${r.c[8]?.v || 0} Б</span>
                     </div>`).join('');
 
-            } catch (e) {
-                console.error("Ошибка:", e);
-            }
+            } catch (e) { console.error("Ошибка загрузки данных", e); }
         }
-        window.onload = load;
     </script>
 </body>
 </html>
