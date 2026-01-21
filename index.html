@@ -3,136 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АЭК | Digital Portal 2.0</title>
+    <title>АЭК ПОРТАЛ | Исправленная Версия</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
         
-        :root {
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #0f172a;
-            --accent: #2563eb;
-            --border: #e2e8f0;
-        }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        
+        /* Плавность вкладок */
+        .tab-content { display: none; opacity: 0; transform: translateY(10px); }
+        .tab-content.active { display: block; opacity: 1; transform: translateY(0); transition: all 0.4s ease-out; }
 
-        .dark {
-            --bg: #0b1120;
-            --card: #1e293b;
-            --text: #f1f5f9;
-            --accent: #3b82f6;
-            --border: #334155;
-        }
-
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); transition: all 0.4s ease; }
-        .glass-card { background: var(--card); border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeInUp 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .auth-overlay { background: radial-gradient(circle at center, #1e40af 0%, #020617 100%); }
-        .input-style { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.2); color: white; transition: 0.3s; }
-        .input-style:focus { border-color: #3b82f6; background: rgba(255,255,255,0.1); outline: none; }
-
-        /* Золотое свечение для 1 места */
-        .winner-card { border: 2px solid #fbbf24 !important; background: linear-gradient(to right, rgba(251,191,36,0.1), transparent); }
+        /* Стиль для авторизации */
+        .auth-gradient { background: radial-gradient(circle at center, #1e40af 0%, #020617 100%); }
+        
+        /* Кастомные тени для темной темы */
+        .dark .dark-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6); }
     </style>
 </head>
-<body class="overflow-x-hidden">
+<body class="bg-slate-50 text-slate-900 dark:bg-[#0f172a] dark:text-slate-100">
 
     <audio id="login-sound" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3"></audio>
 
-    <div id="auth-screen" class="fixed inset-0 z-[100] auth-overlay flex items-center justify-center p-6 transition-all duration-1000">
-        <div class="glass-card !bg-white/5 backdrop-blur-2xl p-10 rounded-[50px] w-full max-w-md text-center border-white/10">
-            <div class="text-6xl text-white mb-6 animate-pulse">
-                <i class="fas fa-mountain"></i>
-            </div>
-            <h2 class="text-white text-3xl font-black mb-2 tracking-tight">АЭК ПОРТАЛ</h2>
-            <p class="text-blue-300 text-sm mb-10 font-medium">Система управления активистами</p>
-            
+    <div id="auth-screen" class="fixed inset-0 z-[100] auth-gradient flex items-center justify-center p-6 transition-transform duration-700">
+        <div class="bg-white/10 backdrop-blur-xl p-10 rounded-[40px] w-full max-w-md text-center border border-white/20 shadow-2xl">
+            <i class="fas fa-mountain text-6xl text-white mb-6"></i>
+            <h2 class="text-white text-3xl font-black mb-8 uppercase tracking-widest">АЭК Система</h2>
             <div class="space-y-4">
-                <input type="text" id="user-name" placeholder="Ваше Имя" 
-                       class="input-style w-full p-5 rounded-3xl text-lg text-center">
-                
-                <input type="text" id="user-group" placeholder="Группа (ИС 1-1)" 
-                       class="input-style w-full p-5 rounded-3xl text-lg text-center uppercase tracking-widest">
+                <input type="text" id="user-name" placeholder="Имя Фамилия" class="w-full p-5 rounded-3xl bg-white/5 border-2 border-white/20 text-white placeholder-blue-200 outline-none focus:border-blue-500 transition-all text-center text-lg font-bold">
+                <input type="text" id="user-group" placeholder="Группа (напр. ИС 1-1)" class="w-full p-5 rounded-3xl bg-white/5 border-2 border-white/20 text-white placeholder-blue-200 outline-none focus:border-blue-500 transition-all text-center text-lg font-bold uppercase tracking-widest">
             </div>
-            
-            <button onclick="handleLogin()" class="w-full mt-8 bg-blue-600 text-white py-5 rounded-3xl font-black text-lg hover:bg-blue-500 shadow-2xl shadow-blue-900/50 transition active:scale-95">
-                ВОЙТИ В СИСТЕМУ
-            </button>
-            <p id="auth-error" class="text-red-400 text-xs mt-6 hidden font-bold underline">Ошибка! Проверьте формат данных</p>
+            <button onclick="handleLogin()" class="w-full mt-8 bg-white text-blue-900 py-5 rounded-3xl font-black text-xl hover:scale-105 active:scale-95 transition-all shadow-xl">ВОЙТИ</button>
+            <p id="auth-error" class="text-red-400 mt-4 hidden font-bold italic text-sm">ВНИМАНИЕ: Ошибка в названии группы</p>
         </div>
     </div>
 
     <div id="main-app" class="hidden min-h-screen">
-        <header class="bg-blue-700 dark:bg-slate-900 text-white pt-16 pb-28 px-8 rounded-b-[60px] shadow-2xl relative transition-all">
+        <header class="fixed top-0 left-0 right-0 z-50 bg-blue-700 dark:bg-slate-900 text-white px-8 py-6 shadow-2xl transition-colors">
             <div class="max-w-6xl mx-auto flex justify-between items-center">
-                <div>
-                    <h1 id="display-name" class="text-3xl font-black tracking-tighter italic">Студент</h1>
-                    <span id="display-group" class="bg-white/20 px-3 py-1 rounded-lg text-[10px] font-black uppercase">Группа</span>
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-user-tie text-blue-700 text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 id="display-name" class="text-xl font-black italic tracking-tighter leading-none">Студент</h1>
+                        <span id="display-group" class="text-[10px] font-bold opacity-70 uppercase">Группа</span>
+                    </div>
                 </div>
-                <button onclick="toggleDark()" class="w-14 h-14 glass-card rounded-3xl flex items-center justify-center text-xl hover:scale-110 transition active:rotate-45">
-                    <i id="theme-icon" class="fas fa-moon text-blue-500"></i>
+                <button onclick="toggleDark()" class="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-2xl flex items-center justify-center text-xl transition-all">
+                    <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
             </div>
         </header>
 
-        <main class="max-w-6xl mx-auto px-6 -mt-16">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-                <button onclick="switchTab('team')" class="glass-card p-6 rounded-[40px] flex flex-col items-center group transition">
-                    <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/40 rounded-2xl flex items-center justify-center mb-3 text-blue-600">
-                        <i class="fas fa-users-crown text-xl"></i>
-                    </div>
-                    <span class="font-black text-[11px] uppercase opacity-60">Команда</span>
+        <main class="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+            
+            <nav class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                <button onclick="switchTab('team')" class="p-6 rounded-[35px] bg-white dark:bg-slate-800 shadow-xl border border-transparent dark:border-slate-700 flex flex-col items-center gap-2 hover:scale-105 transition-all active:scale-95">
+                    <i class="fas fa-users text-blue-600 dark:text-blue-400 text-2xl"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest opacity-60">Команда</span>
                 </button>
-                <button onclick="switchTab('rating')" class="glass-card p-6 rounded-[40px] flex flex-col items-center group transition">
-                    <div class="w-14 h-14 bg-amber-50 dark:bg-amber-900/40 rounded-2xl flex items-center justify-center mb-3 text-amber-500">
-                        <i class="fas fa-award text-xl"></i>
-                    </div>
-                    <span class="font-black text-[11px] uppercase opacity-60">Топ-10</span>
+                <button onclick="switchTab('rating')" class="p-6 rounded-[35px] bg-white dark:bg-slate-800 shadow-xl border border-transparent dark:border-slate-700 flex flex-col items-center gap-2 hover:scale-105 transition-all active:scale-95">
+                    <i class="fas fa-crown text-amber-500 text-2xl"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest opacity-60">Топ-10</span>
                 </button>
-                <button onclick="switchTab('quests')" class="glass-card p-6 rounded-[40px] flex flex-col items-center group transition">
-                    <div class="w-14 h-14 bg-emerald-50 dark:bg-emerald-900/40 rounded-2xl flex items-center justify-center mb-3 text-emerald-500">
-                        <i class="fas fa-rocket text-xl"></i>
-                    </div>
-                    <span class="font-black text-[11px] uppercase opacity-60">Квесты</span>
+                <button onclick="switchTab('quests')" class="p-6 rounded-[35px] bg-white dark:bg-slate-800 shadow-xl border border-transparent dark:border-slate-700 flex flex-col items-center gap-2 hover:scale-105 transition-all active:scale-95">
+                    <i class="fas fa-tasks text-emerald-500 text-2xl"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest opacity-60">Квесты</span>
                 </button>
-                <button onclick="switchTab('chat')" class="glass-card p-6 rounded-[40px] flex flex-col items-center group transition">
-                    <div class="w-14 h-14 bg-violet-50 dark:bg-violet-900/40 rounded-2xl flex items-center justify-center mb-3 text-violet-500">
-                        <i class="fas fa-fingerprint text-xl"></i>
-                    </div>
-                    <span class="font-black text-[11px] uppercase opacity-60">Голос</span>
+                <button onclick="switchTab('chat')" class="p-6 rounded-[35px] bg-white dark:bg-slate-800 shadow-xl border border-transparent dark:border-slate-700 flex flex-col items-center gap-2 hover:scale-105 transition-all active:scale-95">
+                    <i class="fas fa-comments text-purple-500 text-2xl"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest opacity-60">Голос</span>
                 </button>
-            </div>
+            </nav>
 
-            <div id="tab-team" class="tab-content active pb-20">
-                <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-            </div>
+            <section id="tab-team" class="tab-content active">
+                <div id="team-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
 
-            <div id="tab-rating" class="tab-content pb-20">
-                <div class="glass-card rounded-[50px] p-10 max-w-2xl mx-auto overflow-hidden">
-                    <h2 class="text-center font-black text-2xl mb-10 tracking-tight">ЗАЛ СЛАВЫ</h2>
+            <section id="tab-rating" class="tab-content">
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[45px] shadow-2xl border border-transparent dark:border-slate-700 max-w-2xl mx-auto">
+                    <h2 class="text-center font-black text-2xl mb-8 uppercase italic tracking-widest">Зал Славы</h2>
                     <div id="leaderboard" class="space-y-4"></div>
                 </div>
-            </div>
+            </section>
 
-            <div id="tab-quests" class="tab-content pb-20">
-                <div id="quests-list" class="grid gap-6 max-w-3xl mx-auto"></div>
-            </div>
+            <section id="tab-quests" class="tab-content">
+                <div id="quests-list" class="grid gap-4 max-w-3xl mx-auto"></div>
+            </section>
 
-            <div id="tab-chat" class="tab-content pb-20 text-center">
-                <div class="glass-card p-16 rounded-[60px] border-dashed border-4 border-blue-500/20">
-                    <div class="text-7xl mb-6">🔒</div>
-                    <h3 class="text-2xl font-black mb-2 uppercase">Шифрованный канал</h3>
-                    <p class="opacity-50 font-medium">Мы работаем над безопасностью ваших сообщений</p>
+            <section id="tab-chat" class="tab-content text-center py-20">
+                <div class="bg-white dark:bg-slate-800 p-12 rounded-[50px] shadow-xl inline-block">
+                    <i class="fas fa-lock text-5xl text-blue-500 mb-6"></i>
+                    <h3 class="text-2xl font-black uppercase">Раздел Зашифрован</h3>
+                    <p class="opacity-50 text-sm">Доступ появится после 25-го января</p>
                 </div>
-            </div>
+            </section>
         </main>
     </div>
 
@@ -153,7 +125,9 @@
                 document.getElementById('auth-screen').style.transform = 'translateY(-100%)';
                 setTimeout(() => showApp(name, group), 600);
             } else {
-                document.getElementById('auth-error').classList.remove('hidden');
+                const err = document.getElementById('auth-error');
+                err.classList.remove('hidden');
+                setTimeout(() => err.classList.add('hidden'), 3000);
             }
         }
 
@@ -166,8 +140,8 @@
         }
 
         function toggleDark() {
-            document.body.classList.toggle('dark');
-            const isDark = document.body.classList.contains('dark');
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
             document.getElementById('theme-icon').className = isDark ? 'fas fa-sun' : 'fas fa-moon';
             localStorage.setItem('aec_theme', isDark ? 'dark' : 'light');
         }
@@ -175,7 +149,6 @@
         function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById('tab-'+id).classList.add('active');
-            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         window.onload = () => {
@@ -196,41 +169,36 @@
             document.getElementById('team-list').innerHTML = rows.slice(1).map(r => {
                 if(!r.c[0]?.v) return '';
                 return `
-                <div class="glass-card p-10 rounded-[50px] group hover:bg-blue-600 transition duration-500">
-                    <div class="w-14 h-14 bg-blue-100 dark:bg-slate-700 rounded-2xl mb-6 flex items-center justify-center font-black group-hover:bg-white group-hover:text-blue-600 transition">
-                        ${r.c[0].v.charAt(0)}
-                    </div>
-                    <h3 class="font-black text-2xl mb-1 group-hover:text-white transition tracking-tighter">${r.c[0].v}</h3>
-                    <p class="text-blue-500 group-hover:text-blue-100 text-xs font-black uppercase mb-6">${r.c[1]?.v || ''}</p>
-                    <p class="opacity-50 group-hover:text-white text-sm italic leading-relaxed">"${r.c[2]?.v || 'АЭК — сила!'}"</p>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[40px] shadow-lg hover:shadow-2xl transition-all border border-transparent dark:border-slate-700">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black mb-4">${r.c[0].v.charAt(0)}</div>
+                    <h3 class="font-black text-xl mb-1">${r.c[0].v}</h3>
+                    <p class="text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase mb-4 tracking-tighter">${r.c[1]?.v || ''}</p>
+                    <p class="opacity-50 text-xs italic">"${r.c[2]?.v || 'АЭК — это стиль'}"</p>
                 </div>`;
             }).join('');
 
-            // РЕЙТИНГ С СОРТИРОВКОЙ
-            const sortedRating = rows.slice(1)
+            // РЕЙТИНГ (СОРТИРОВКА + ТЕМА)
+            const sorted = rows.slice(1)
                 .filter(r => r.c[4]?.v)
                 .map(r => ({ name: r.c[4].v, score: r.c[5]?.v || 0 }))
                 .sort((a, b) => b.score - a.score);
 
-            document.getElementById('leaderboard').innerHTML = sortedRating.map((p, i) => `
-                <div class="flex justify-between items-center p-6 rounded-3xl ${i==0 ? 'winner-card' : 'bg-gray-50 dark:bg-slate-800/50'} border border-transparent transition">
-                    <div class="flex items-center gap-5">
-                        <span class="w-10 h-10 flex items-center justify-center font-black text-xl ${i==0 ? 'text-amber-500 animate-bounce' : 'opacity-20'}">
+            document.getElementById('leaderboard').innerHTML = sorted.map((p, i) => `
+                <div class="flex justify-between items-center p-5 rounded-3xl ${i==0 ? 'bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-400' : 'bg-slate-50 dark:bg-slate-700/50 border border-transparent'} transition-all">
+                    <div class="flex items-center gap-4">
+                        <span class="w-8 h-8 flex items-center justify-center font-black ${i==0 ? 'text-amber-500 text-xl animate-bounce' : 'opacity-30'}">
                             ${i==0 ? '<i class="fas fa-crown"></i>' : i+1}
                         </span>
-                        <span class="font-bold text-lg tracking-tight">${p.name}</span>
+                        <span class="font-bold text-sm md:text-base">${p.name}</span>
                     </div>
-                    <span class="bg-blue-600 text-white px-5 py-2 rounded-2xl font-black text-xs shadow-lg">${p.score} БАЛЛОВ</span>
+                    <span class="bg-blue-600 text-white px-4 py-1.5 rounded-xl font-black text-[10px] shadow-lg">${p.score} БАЛЛОВ</span>
                 </div>`).join('');
 
             // КВЕСТЫ
             document.getElementById('quests-list').innerHTML = rows.slice(1).filter(r => r.c[7]?.v).map(r => `
-                <div class="glass-card p-8 rounded-[40px] flex justify-between items-center border-l-8 border-l-emerald-500 hover:translate-x-2 transition">
-                    <div>
-                        <h4 class="font-bold text-lg mb-1">${r.c[7].v}</h4>
-                        <span class="text-[10px] uppercase font-black opacity-30 tracking-[3px]">Активное задание</span>
-                    </div>
-                    <span class="text-emerald-500 font-black text-xl tracking-tighter">+${r.c[8]?.v || 0} Б</span>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-3xl border-l-8 border-emerald-500 shadow-md flex justify-between items-center hover:translate-x-2 transition-all">
+                    <h4 class="font-bold text-sm md:text-base">${r.c[7].v}</h4>
+                    <span class="text-emerald-500 font-black whitespace-nowrap ml-4">+${r.c[8]?.v || 0} Б</span>
                 </div>`).join('');
         }
     </script>
