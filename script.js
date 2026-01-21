@@ -1,54 +1,49 @@
 const SPREADSHEET_ID = '1BEi1MzL4-2vTVGa_2yyYnVkkDcSch6GIZKeWUHRYFxY';
 
-async function fetchSheet(sheetName) {
+// Твои проверенные GID вкладок
+const GIDS = {
+    'Team': '0',
+    'Rating': '275005876',
+    'Quests': '1346137915'
+};
+
+async function fetchSheetByGid(gid) {
     try {
-        // Мы добавляем случайный параметр &t=, чтобы Google думал, что это новый запрос
-        // И используем sheet= чтобы он переключил вкладку
-        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&t=${Date.now()}`;
-        
+        // Запрос идет по конкретному ID вкладки (gid), что исключает ошибки с именами
+        const url = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&gid=${gid}&t=${Date.now()}`;
         const response = await fetch(url);
         const text = await response.text();
-        
-        // Очистка данных от мусора Google
         const json = JSON.parse(text.substring(47).slice(0, -2));
-        const rows = json.table.rows;
-
-        // Проверяем, есть ли данные в этой вкладке
-        if (!rows || rows.length <= 1) {
-            console.warn(`Вкладка ${sheetName} пустая или не загрузилась`);
-            return [];
-        }
-
-        return rows.slice(1); // Возвращаем всё, кроме первой строки
+        return json.table.rows;
     } catch (e) {
-        console.error("Критическая ошибка загрузки " + sheetName, e);
+        console.error("Ошибка загрузки данных для GID " + gid, e);
         return [];
     }
 }
 
 async function renderAll() {
-    console.log("Начинаю полное обновление данных...");
+    console.log("Загрузка данных по GID начата...");
 
     // 1. ЗАГРУЗКА КОМАНДЫ (Лист Team)
-    const teamRows = await fetchSheet('Team');
+    const teamData = await fetchSheetByGid(GIDS.Team);
+    const teamRows = teamData.slice(1);
     const teamDiv = document.getElementById('team-list');
     if (teamDiv) {
-        teamDiv.innerHTML = teamRows.map(r => r.c[0] ? `
+        teamDiv.innerHTML = teamRows.map(r => r.c && r.c[0] ? `
             <div class="bg-white p-6 rounded-2xl shadow-md border-t-4 border-blue-600 text-center fade-in">
                 <h3 class="font-bold text-lg text-blue-900">${r.c[0].v}</h3>
                 <p class="text-blue-500 text-xs uppercase font-bold mb-2">${r.c[1]?.v || ''}</p>
-                <p class="text-gray-500 text-sm">"${r.c[2]?.v || ''}"</p>
+                <p class="text-gray-500 text-sm italic">"${r.c[2]?.v || ''}"</p>
             </div>` : '').join('');
     }
 
     // 2. ЗАГРУЗКА РЕЙТИНГА (Лист Rating)
-    const ratingRows = await fetchSheet('Rating');
+    const ratingData = await fetchSheetByGid(GIDS.Rating);
+    const ratingRows = ratingData.slice(1).filter(r => r.c && r.c[0] && r.c[1]);
     const leaderboardDiv = document.getElementById('leaderboard');
     if (leaderboardDiv) {
-        const sorted = ratingRows
-            .filter(r => r.c && r.c[0] && r.c[1])
-            .sort((a, b) => (Number(b.c[1].v) || 0) - (Number(a.c[1].v) || 0));
-        
+        // Сортировка по баллам (вторая колонка)
+        const sorted = ratingRows.sort((a, b) => (Number(b.c[1].v) || 0) - (Number(a.c[1].v) || 0));
         leaderboardDiv.innerHTML = sorted.map((r, i) => `
             <div class="flex justify-between items-center p-4 border-b ${i===0?'bg-yellow-50':''}">
                 <span class="font-medium">${i+1}. ${r.c[0].v}</span>
@@ -57,18 +52,17 @@ async function renderAll() {
     }
 
     // 3. ЗАГРУЗКА КВЕСТОВ (Лист Quests)
-    const questRows = await fetchSheet('Quests');
+    const questData = await fetchSheetByGid(GIDS.Quests);
+    const questRows = questData.slice(1).filter(r => r.c && r.c[0]);
     const questDiv = document.getElementById('quests-list');
     if (questDiv) {
-        // Очищаем перед вставкой, чтобы старое имя точно исчезло
-        questDiv.innerHTML = ""; 
-        questDiv.innerHTML = questRows.map(r => r.c && r.c[0] ? `
+        questDiv.innerHTML = questRows.map(r => `
             <div class="bg-white border-2 border-dashed border-blue-200 p-4 rounded-xl flex justify-between items-center shadow-sm fade-in">
                 <span class="font-medium text-gray-700">${r.c[0].v}</span>
                 <span class="text-green-600 font-black">+${r.c[1]?.v || 0} Б</span>
-            </div>` : '').join('');
+            </div>`).join('');
     }
 }
 
-// Запускаем
-renderAll();
+// Запуск при загрузке страницы
+document.addEventListener('DOMContentLoaded', renderAll);
